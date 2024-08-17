@@ -15,7 +15,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class OpenTelemetryOtlpConfigTest {
+public class OpenTelemetryStartupConfigTest {
 
   private OpenTelemetrySetupData otelSetupData;
   private OtelServiceConfigData serviceConfig;
@@ -24,7 +24,7 @@ public class OpenTelemetryOtlpConfigTest {
   private OtelMeterConfigData meterConfig;
   private OtelLoggingConfigData loggingConfig;
 
-  private OpenTelemetryOtlpConfig openTelemetryOtlpConfig;
+  private OpenTelemetryStartupConfig openTelemetryStartupConfig;
 
   @BeforeEach
   public void setUp() {
@@ -66,16 +66,16 @@ public class OpenTelemetryOtlpConfigTest {
         new OpenTelemetrySetupData(
             serviceConfig, otlpConfig, tracingConfig, meterConfig, loggingConfig);
 
-    openTelemetryOtlpConfig = new OpenTelemetryOtlpConfig(otelSetupData);
+    openTelemetryStartupConfig = new OpenTelemetryStartupConfig(otelSetupData);
 
-    OpenTelemetry openTelemetry = openTelemetryOtlpConfig.getOpenTelemetry();
+    OpenTelemetry openTelemetry = openTelemetryStartupConfig.getOpenTelemetry();
     assertNotNull(openTelemetry);
   }
 
   @Test
   public void testGetOpenTelemetry() {
-    openTelemetryOtlpConfig = new OpenTelemetryOtlpConfig(otelSetupData);
-    OpenTelemetry openTelemetry = openTelemetryOtlpConfig.getOpenTelemetry();
+    openTelemetryStartupConfig = new OpenTelemetryStartupConfig(otelSetupData);
+    OpenTelemetry openTelemetry = openTelemetryStartupConfig.getOpenTelemetry();
     assertNotNull(openTelemetry);
   }
 
