@@ -44,6 +44,12 @@
             <artifactId>commons-lang3</artifactId>
         </dependency>
 
+        <!-- Logging Libraries -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+
         <!-- JUnit 5  Test Dependencies -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>

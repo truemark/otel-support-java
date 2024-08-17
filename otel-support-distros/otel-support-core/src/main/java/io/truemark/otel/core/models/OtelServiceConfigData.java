@@ -22,4 +22,16 @@ public class OtelServiceConfigData {
   public String getServiceVertion() {
     return serviceVertion;
   }
+
+  @Override
+  public String toString() {
+    return "OtelServiceConfigData{"
+        + "serviceName='"
+        + serviceName
+        + '\''
+        + ", serviceVertion='"
+        + serviceVertion
+        + '\''
+        + '}';
+  }
 }

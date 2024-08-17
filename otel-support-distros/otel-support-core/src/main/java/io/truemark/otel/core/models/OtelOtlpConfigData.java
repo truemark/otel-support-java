@@ -22,4 +22,15 @@ public class OtelOtlpConfigData {
   public String getOtlpEndpoint() {
     return otlpEndpoint;
   }
+
+  @Override
+  public String toString() {
+    return "OtelOtlpConfigData{"
+        + "otlpEnabled="
+        + otlpEnabled
+        + ", otlpEndpoint='"
+        + otlpEndpoint
+        + '\''
+        + '}';
+  }
 }

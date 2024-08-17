@@ -22,24 +22,26 @@ import io.truemark.otel.core.creators.SdkMeterProviderCreator;
 import io.truemark.otel.core.creators.SdkTracerProviderCreator;
 import io.truemark.otel.core.models.OpenTelemetrySetupData;
 import java.util.Objects;
+import java.util.logging.Logger;
 
 public class OpenTelemetryOtlpConfig {
 
+  private static final Logger log = Logger.getLogger(OpenTelemetryOtlpConfig.class.getName());
   private static final AttributeKey<String> SERVICE_NAME_KEY = ServiceAttributes.SERVICE_NAME;
   private static final AttributeKey<String> SERVICE_VERSION_KEY = ServiceAttributes.SERVICE_VERSION;
 
   private final OpenTelemetrySetupData otelSetupData;
   private OpenTelemetry openTelemetry;
 
-  public OpenTelemetryOtlpConfig(OpenTelemetrySetupData otelSetupData) {
+  public OpenTelemetryOtlpConfig(final OpenTelemetrySetupData otelSetupData) {
     this.otelSetupData =
         Objects.requireNonNull(otelSetupData, "OpenTelemetrySetupData must be provided");
     this.initialize();
   }
 
   private void initialize() {
-    OpenTelemetrySdkBuilder openTelemetryBuilder = OpenTelemetrySdk.builder();
-    Resource resource = createResource();
+    final OpenTelemetrySdkBuilder openTelemetryBuilder = OpenTelemetrySdk.builder();
+    final Resource resource = createResource();
 
     configureTracing(openTelemetryBuilder, resource);
     configureMetrics(openTelemetryBuilder, resource);
@@ -58,41 +60,52 @@ public class OpenTelemetryOtlpConfig {
   }
 
   private void configureTracing(OpenTelemetrySdkBuilder openTelemetryBuilder, Resource resource) {
-    SpanExporter spanExporter =
-        otelSetupData.getOtlpConfig().isOtlpEnabled()
-            ? OtlpGrpcSpanExporter.builder()
-                .setEndpoint(otelSetupData.getOtlpConfig().getOtlpEndpoint())
-                .build()
-            : OtlpGrpcSpanExporter.builder().build();
+    if (otelSetupData.getOtelTracingConfig().isTracingEnabled()) {
+      SpanExporter spanExporter =
+          otelSetupData.getOtlpConfig().isOtlpEnabled()
+              ? OtlpGrpcSpanExporter.builder()
+                  .setEndpoint(otelSetupData.getOtlpConfig().getOtlpEndpoint())
+                  .build()
+              : OtlpGrpcSpanExporter.builder().build();
 
-    SdkTracerProvider sdkTracerProvider =
-        SdkTracerProviderCreator.createTracerProvider(
-            resource, spanExporter, otelSetupData.getOtelTracingConfig().isBatchingEnabled());
-    openTelemetryBuilder.setTracerProvider(sdkTracerProvider);
+      SdkTracerProvider sdkTracerProvider =
+          SdkTracerProviderCreator.createTracerProvider(
+              resource, spanExporter, otelSetupData.getOtelTracingConfig().isBatchingEnabled());
+      openTelemetryBuilder.setTracerProvider(sdkTracerProvider);
+    } else {
+      log.info("Otel Tracing is disabled");
+    }
   }
 
   private void configureMetrics(OpenTelemetrySdkBuilder openTelemetryBuilder, Resource resource) {
-    MetricExporter metricExporter =
-        otelSetupData.getOtlpConfig().isOtlpEnabled()
-            ? OtlpGrpcMetricExporter.builder()
-                .setEndpoint(otelSetupData.getOtlpConfig().getOtlpEndpoint())
-                .build()
-            : OtlpGrpcMetricExporter.builder().build();
 
-    SdkMeterProvider sdkMeterProvider =
-        SdkMeterProviderCreator.createMeterProvider(resource, metricExporter);
-    openTelemetryBuilder.setMeterProvider(sdkMeterProvider);
+    if (otelSetupData.getOtelMeterConfig().isMeterEnabled()) {
+      final MetricExporter metricExporter =
+          otelSetupData.getOtlpConfig().isOtlpEnabled()
+              ? OtlpGrpcMetricExporter.builder()
+                  .setEndpoint(otelSetupData.getOtlpConfig().getOtlpEndpoint())
+                  .build()
+              : OtlpGrpcMetricExporter.builder().build();
+
+      final SdkMeterProvider sdkMeterProvider =
+          SdkMeterProviderCreator.createMeterProvider(resource, metricExporter);
+      openTelemetryBuilder.setMeterProvider(sdkMeterProvider);
+    } else {
+      log.info("Otel Meter is disabled");
+    }
   }
 
   private void configureLogging(OpenTelemetrySdkBuilder openTelemetryBuilder, Resource resource) {
     if (otelSetupData.getOtelLoggingConfig().isLoggingEnabled()) {
-      LogRecordExporter logRecordExporter = OtlpGrpcLogRecordExporter.builder().build();
-      SdkLoggerProvider sdkLoggerProvider =
+      final LogRecordExporter logRecordExporter = OtlpGrpcLogRecordExporter.builder().build();
+      final SdkLoggerProvider sdkLoggerProvider =
           SdkLoggerProviderCreator.createLoggerProvider(
               resource,
               logRecordExporter,
               otelSetupData.getOtelLoggingConfig().isBatchingEnabled());
       openTelemetryBuilder.setLoggerProvider(sdkLoggerProvider);
+    } else {
+      log.info("Otel Logging is disabled");
     }
   }
 
