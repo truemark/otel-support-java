@@ -88,7 +88,8 @@ public class OpenTelemetryOtlpConfig {
               : OtlpGrpcMetricExporter.builder().build();
 
       final SdkMeterProvider sdkMeterProvider =
-          SdkMeterProviderCreator.createMeterProvider(resource, metricExporter);
+          SdkMeterProviderCreator.createMeterProvider(
+              resource, metricExporter, otelSetupData.getOtelMeterConfig().getMetricViews());
       openTelemetryBuilder.setMeterProvider(sdkMeterProvider);
     } else {
       log.info("Otel Meter is disabled");
