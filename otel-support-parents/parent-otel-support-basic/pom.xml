@@ -18,6 +18,7 @@
         <spotless.version>2.43.0</spotless.version>
         <jacoco-maven-plugin.version>0.8.12</jacoco-maven-plugin.version>
         <code.coverage.threshold>0.80</code.coverage.threshold>
+        <commons-lang3.version>3.16.0</commons-lang3.version>
     </properties>
 
     <dependencyManagement>
@@ -55,6 +56,13 @@
                 <version>${mockito-bom.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+
+            <!-- Utility Libraries -->
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${commons-lang3.version}</version>
             </dependency>
 
         </dependencies>

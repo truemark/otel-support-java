@@ -1,4 +1,4 @@
-package io.truemark.observability.otel.creators;
+package io.truemark.otel.core.creators;
 
 import io.opentelemetry.sdk.resources.Resource;
 import io.opentelemetry.sdk.trace.SdkTracerProvider;

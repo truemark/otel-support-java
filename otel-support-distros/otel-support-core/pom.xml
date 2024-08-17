@@ -38,6 +38,12 @@
             <artifactId>opentelemetry-exporter-logging</artifactId>
         </dependency>
 
+        <!-- Utility Libraries -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+        </dependency>
+
         <!-- JUnit 5  Test Dependencies -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
