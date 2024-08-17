@@ -5,9 +5,9 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>io.truemark</groupId>
-        <artifactId>otel-support-parent</artifactId>
+        <artifactId>parent-otel-support-spring-boot-3.x</artifactId>
         <version>1.0-SNAPSHOT</version>
-        <relativePath>../../otel-support-parent/pom.xml</relativePath>
+        <relativePath>../../otel-support-parents/parent-otel-support-spring-boot-3.x</relativePath>
     </parent>
 
     <artifactId>otel-support-sample-spring-boot-3.x</artifactId>
