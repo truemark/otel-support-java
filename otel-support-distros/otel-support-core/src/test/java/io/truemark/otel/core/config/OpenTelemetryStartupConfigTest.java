@@ -31,7 +31,7 @@ public class OpenTelemetryStartupConfigTest {
     serviceConfig = new OtelServiceConfigData("test-service", "1.0.0");
     otlpConfig = new OtelOtlpConfigData(true, "http://localhost:4317");
     tracingConfig = new OtelTracingConfigData(true, true);
-    meterConfig = new OtelMeterConfigData(true, Collections.emptyList());
+    meterConfig = new OtelMeterConfigData(true);
     loggingConfig = new OtelLoggingConfigData(true, true);
 
     otelSetupData =
@@ -59,7 +59,7 @@ public class OpenTelemetryStartupConfigTest {
       boolean loggingEnabled) {
     otlpConfig = new OtelOtlpConfigData(otlpEnabled, otlpEnabled ? "http://localhost:4317" : null);
     tracingConfig = new OtelTracingConfigData(tracingEnabled, batchingEnabled);
-    meterConfig = new OtelMeterConfigData(meterEnabled, Collections.emptyList());
+    meterConfig = new OtelMeterConfigData(meterEnabled);
     loggingConfig = new OtelLoggingConfigData(loggingEnabled, batchingEnabled);
 
     otelSetupData =

@@ -4,11 +4,10 @@ import java.util.List;
 
 public class OtelMeterConfigData {
   private final boolean isMeterEnabled;
-  private final List<MetricView> metricViews;
+  private List<MetricView> metricViews;
 
-  public OtelMeterConfigData(boolean isMeterEnabled, List<MetricView> metricViews) {
+  public OtelMeterConfigData(boolean isMeterEnabled) {
     this.isMeterEnabled = isMeterEnabled;
-    this.metricViews = metricViews;
   }
 
   public boolean isMeterEnabled() {
@@ -19,6 +18,9 @@ public class OtelMeterConfigData {
     return metricViews;
   }
 
+    public void setMetricViews(List<MetricView> metricViews) {
+        this.metricViews = metricViews;
+    }
   @Override
   public String toString() {
     return "OtelMeterConfigData{"

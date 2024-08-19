@@ -30,7 +30,7 @@ public class TracingOtelConfigFilter implements OtelConfigFilter {
 
       SdkTracerProvider sdkTracerProvider =
           SdkTracerProviderCreator.createTracerProvider(
-              resource, spanExporter, setupData.getOtelTracingConfig().isBatchingEnabled());
+              resource, spanExporter, setupData.getOtelTracingConfig());
       builder.setTracerProvider(sdkTracerProvider);
     } else {
       log.info("Otel Tracing is disabled");

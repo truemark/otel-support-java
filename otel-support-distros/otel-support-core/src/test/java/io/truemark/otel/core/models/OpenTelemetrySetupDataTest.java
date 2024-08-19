@@ -29,7 +29,7 @@ public class OpenTelemetrySetupDataTest {
     OtelTracingConfigData tracingConfig =
         new OtelTracingConfigData(tracingEnabled, batchingEnabled);
     OtelMeterConfigData meterConfig =
-        new OtelMeterConfigData(meterEnabled, Collections.emptyList());
+        new OtelMeterConfigData(meterEnabled);
     OtelLoggingConfigData loggingConfig =
         new OtelLoggingConfigData(loggingEnabled, loggingBatchingEnabled);
 
@@ -49,7 +49,7 @@ public class OpenTelemetrySetupDataTest {
     OtelServiceConfigData serviceConfig = new OtelServiceConfigData("test-service", "1.0.0");
     OtelOtlpConfigData otlpConfig = new OtelOtlpConfigData(true, "http://localhost:4317");
     OtelTracingConfigData tracingConfig = new OtelTracingConfigData(true, true);
-    OtelMeterConfigData meterConfig = new OtelMeterConfigData(true, Collections.emptyList());
+    OtelMeterConfigData meterConfig = new OtelMeterConfigData(true);
     OtelLoggingConfigData loggingConfig = new OtelLoggingConfigData(true, true);
 
     assertThrows(
