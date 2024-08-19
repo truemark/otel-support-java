@@ -15,7 +15,7 @@ public final class SdkTracerProviderCreator {
   }
 
   public static SdkTracerProvider createTracerProvider(
-      final Resource resource,
+      final Resource defaultResource,
       final SpanExporter spanExporter,
       final OtelTracingConfigData tracingConfig) {
     final SdkTracerProviderBuilder tracerProviderBuilder = SdkTracerProvider.builder();
@@ -33,7 +33,9 @@ public final class SdkTracerProviderCreator {
                       : SimpleSpanProcessor.builder(spanExporter).build());
             });
 
-    tracerProviderBuilder.setResource(resource);
+    if (defaultResource != null) {
+      tracerProviderBuilder.addResource(defaultResource);
+    }
     return tracerProviderBuilder.build();
   }
 }

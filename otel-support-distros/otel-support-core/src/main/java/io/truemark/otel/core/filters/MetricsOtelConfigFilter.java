@@ -7,7 +7,10 @@ import io.opentelemetry.sdk.metrics.SdkMeterProvider;
 import io.opentelemetry.sdk.metrics.export.MetricExporter;
 import io.opentelemetry.sdk.resources.Resource;
 import io.truemark.otel.core.creators.SdkMeterProviderCreator;
+import io.truemark.otel.core.models.MetricExporterHolder;
 import io.truemark.otel.core.models.OpenTelemetrySetupData;
+import io.truemark.otel.core.models.OtelMeterConfigData;
+import java.util.Collections;
 import java.util.logging.Logger;
 
 public class MetricsOtelConfigFilter implements OtelConfigFilter {
@@ -17,24 +20,36 @@ public class MetricsOtelConfigFilter implements OtelConfigFilter {
   @Override
   public void apply(
       final OpenTelemetrySdkBuilder builder,
-      final Resource resource,
+      final Resource defaultResource,
       final OpenTelemetrySetupData setupData,
       final OtelConfigFilterChain filterChain) {
     if (setupData.getOtelMeterConfig().isMeterEnabled()) {
-      MetricExporter metricExporter =
-          setupData.getOtlpConfig().isOtlpEnabled()
-              ? OtlpGrpcMetricExporter.builder()
-                  .setEndpoint(setupData.getOtlpConfig().getOtlpEndpoint())
-                  .build()
-              : OtlpGrpcMetricExporter.builder().build();
+      final boolean canUseDefaultExporter =
+          setupData.getOtelMeterConfig().getMetricExporterHolders() == null
+              || setupData.getOtelMeterConfig().getMetricExporterHolders().isEmpty();
+      final OtelMeterConfigData otelMeterConfig;
+      if (canUseDefaultExporter) {
+        final OtelMeterConfigData existingOtelMetricConfig = setupData.getOtelMeterConfig();
+        final MetricExporter metricExporter =
+            setupData.getOtlpConfig().isOtlpEnabled()
+                ? OtlpGrpcMetricExporter.builder()
+                    .setEndpoint(setupData.getOtlpConfig().getOtlpEndpoint())
+                    .build()
+                : OtlpGrpcMetricExporter.builder().build();
+        otelMeterConfig =
+            new OtelMeterConfigData(
+                existingOtelMetricConfig.isMeterEnabled(),
+                Collections.singletonList(new MetricExporterHolder(metricExporter)));
+      } else {
+        otelMeterConfig = setupData.getOtelMeterConfig();
+      }
 
       SdkMeterProvider sdkMeterProvider =
-          SdkMeterProviderCreator.createMeterProvider(
-              resource, metricExporter, setupData.getOtelMeterConfig().getMetricViews());
+          SdkMeterProviderCreator.createMeterProvider(defaultResource, otelMeterConfig);
       builder.setMeterProvider(sdkMeterProvider);
     } else {
       log.info("Otel Meter is disabled");
     }
-    filterChain.doFilter(builder, resource, setupData);
+    filterChain.doFilter(builder, defaultResource, setupData);
   }
 }

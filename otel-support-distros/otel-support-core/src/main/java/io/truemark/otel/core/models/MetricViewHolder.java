@@ -4,12 +4,12 @@ import io.opentelemetry.sdk.metrics.InstrumentSelector;
 import io.opentelemetry.sdk.metrics.View;
 import java.util.Objects;
 
-public class MetricView {
+public class MetricViewHolder {
 
   private final InstrumentSelector selector;
   private final View view;
 
-  public MetricView(InstrumentSelector selector, View view) {
+  public MetricViewHolder(InstrumentSelector selector, View view) {
     Objects.requireNonNull(selector, "selector is required");
     Objects.requireNonNull(view, "view is required");
     this.selector = selector;

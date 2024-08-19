@@ -11,7 +11,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-public class MetricViewTest {
+public class MetricViewHolderTest {
 
   static Stream<Arguments> provideSelectorAndView() {
     return Stream.of(Arguments.of(mock(InstrumentSelector.class), mock(View.class)));
@@ -21,10 +21,10 @@ public class MetricViewTest {
   @MethodSource("provideSelectorAndView")
   public void test_MetcriViewConstructorAndGetters_givenVaryingInputs(
       InstrumentSelector selector, View view) {
-    MetricView metricView = new MetricView(selector, view);
+    MetricViewHolder metricViewHolder = new MetricViewHolder(selector, view);
 
-    assertNotNull(metricView);
-    assertEquals(selector, metricView.getSelector());
-    assertEquals(view, metricView.getView());
+    assertNotNull(metricViewHolder);
+    assertEquals(selector, metricViewHolder.getSelector());
+    assertEquals(view, metricViewHolder.getView());
   }
 }

@@ -1,6 +1,7 @@
 package io.truemark.otel.core.models;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 
 import io.opentelemetry.sdk.trace.export.SpanExporter;
@@ -33,7 +34,8 @@ public class OpenTelemetrySetupDataTest {
             tracingEnabled,
             Collections.singletonList(
                 new TraceSpanExporter(batchingEnabled, mock(SpanExporter.class))));
-    OtelMeterConfigData meterConfig = new OtelMeterConfigData(meterEnabled);
+    OtelMeterConfigData meterConfig =
+        new OtelMeterConfigData(meterEnabled, Collections.emptyList());
     OtelLoggingConfigData loggingConfig =
         new OtelLoggingConfigData(loggingEnabled, loggingBatchingEnabled);
 
@@ -55,7 +57,7 @@ public class OpenTelemetrySetupDataTest {
     OtelTracingConfigData tracingConfig =
         new OtelTracingConfigData(
             true, Collections.singletonList(new TraceSpanExporter(true, mock(SpanExporter.class))));
-    OtelMeterConfigData meterConfig = new OtelMeterConfigData(true);
+    OtelMeterConfigData meterConfig = new OtelMeterConfigData(true, Collections.emptyList());
     OtelLoggingConfigData loggingConfig = new OtelLoggingConfigData(true, true);
 
     assertThrows(

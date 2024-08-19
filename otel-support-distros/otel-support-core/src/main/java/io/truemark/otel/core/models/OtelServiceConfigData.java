@@ -11,6 +11,7 @@ public class OtelServiceConfigData {
     if (StringUtils.isNullOrEmpty(serviceName) || StringUtils.isNullOrEmpty(serviceVertion)) {
       throw new IllegalArgumentException("Service name and version must be provided");
     }
+
     this.serviceName = serviceName;
     this.serviceVertion = serviceVertion;
   }

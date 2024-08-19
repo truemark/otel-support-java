@@ -3,32 +3,41 @@ package io.truemark.otel.core.models;
 import java.util.List;
 
 public class OtelMeterConfigData {
-  private final boolean isMeterEnabled;
-  private List<MetricView> metricViews;
+  private final boolean meterEnabled;
+  private final List<MetricExporterHolder> metricExporterHolders;
+  private List<MetricViewHolder> metricViewHolders;
 
-  public OtelMeterConfigData(boolean isMeterEnabled) {
-    this.isMeterEnabled = isMeterEnabled;
+  public OtelMeterConfigData(
+      boolean meterEnabled, List<MetricExporterHolder> metricExporterHolders) {
+    this.meterEnabled = meterEnabled;
+    this.metricExporterHolders = metricExporterHolders;
   }
 
   public boolean isMeterEnabled() {
-    return isMeterEnabled;
+    return meterEnabled;
   }
 
-  public List<MetricView> getMetricViews() {
-    return metricViews;
+  public List<MetricViewHolder> getMetricViewHolders() {
+    return metricViewHolders;
   }
 
-  public void setMetricViews(List<MetricView> metricViews) {
-    this.metricViews = metricViews;
+  public void setMetricViews(List<MetricViewHolder> metricViewHolders) {
+    this.metricViewHolders = metricViewHolders;
+  }
+
+  public List<MetricExporterHolder> getMetricExporterHolders() {
+    return metricExporterHolders;
   }
 
   @Override
   public String toString() {
     return "OtelMeterConfigData{"
-        + "isMeterEnabled="
-        + isMeterEnabled
-        + ", metricViews="
-        + metricViews
+        + "meterEnabled="
+        + meterEnabled
+        + ", metricExporterConfig="
+        + metricExporterHolders
+        + ", metricViewHolders="
+        + metricViewHolders
         + '}';
   }
 }

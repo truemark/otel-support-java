@@ -1,12 +1,18 @@
 package io.truemark.otel.core.config;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.mock;
 
 import io.opentelemetry.api.GlobalOpenTelemetry;
 import io.opentelemetry.api.OpenTelemetry;
 import io.opentelemetry.sdk.trace.export.SpanExporter;
-import io.truemark.otel.core.models.*;
+import io.truemark.otel.core.models.OpenTelemetrySetupData;
+import io.truemark.otel.core.models.OtelLoggingConfigData;
+import io.truemark.otel.core.models.OtelMeterConfigData;
+import io.truemark.otel.core.models.OtelOtlpConfigData;
+import io.truemark.otel.core.models.OtelServiceConfigData;
+import io.truemark.otel.core.models.OtelTracingConfigData;
+import io.truemark.otel.core.models.TraceSpanExporter;
 import java.util.Collections;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,7 +41,7 @@ public class OpenTelemetryStartupConfigTest {
     tracingConfig =
         new OtelTracingConfigData(
             true, Collections.singletonList(new TraceSpanExporter(true, mock(SpanExporter.class))));
-    meterConfig = new OtelMeterConfigData(true);
+    meterConfig = new OtelMeterConfigData(true, Collections.emptyList());
     loggingConfig = new OtelLoggingConfigData(true, true);
 
     otelSetupData =
@@ -67,7 +73,7 @@ public class OpenTelemetryStartupConfigTest {
             tracingEnabled,
             Collections.singletonList(
                 new TraceSpanExporter(batchingEnabled, mock(SpanExporter.class))));
-    meterConfig = new OtelMeterConfigData(meterEnabled);
+    meterConfig = new OtelMeterConfigData(meterEnabled, Collections.emptyList());
     loggingConfig = new OtelLoggingConfigData(loggingEnabled, batchingEnabled);
 
     otelSetupData =

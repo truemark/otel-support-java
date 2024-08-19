@@ -5,17 +5,17 @@ import java.util.Objects;
 
 public class TraceSpanExporter {
 
-  private final boolean isBatchingEnabled;
+  private final boolean batchingEnabled;
   private final SpanExporter spanExporter;
 
   public TraceSpanExporter(boolean isBatchingEnabled, SpanExporter spanExporter) {
     Objects.requireNonNull(spanExporter, "Span exporter must not be provide");
-    this.isBatchingEnabled = isBatchingEnabled;
+    this.batchingEnabled = isBatchingEnabled;
     this.spanExporter = spanExporter;
   }
 
   public boolean isBatchingEnabled() {
-    return isBatchingEnabled;
+    return batchingEnabled;
   }
 
   public SpanExporter getSpanExporter() {
@@ -25,8 +25,8 @@ public class TraceSpanExporter {
   @Override
   public String toString() {
     return "TraceSpanExporter{"
-        + "isBatchingEnabled="
-        + isBatchingEnabled
+        + "batchingEnabled="
+        + batchingEnabled
         + ", spanExporter="
         + spanExporter
         + '}';
