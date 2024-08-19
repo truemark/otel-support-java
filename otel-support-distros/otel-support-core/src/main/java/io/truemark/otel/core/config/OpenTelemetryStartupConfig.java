@@ -8,9 +8,12 @@ import io.opentelemetry.sdk.OpenTelemetrySdk;
 import io.opentelemetry.sdk.OpenTelemetrySdkBuilder;
 import io.opentelemetry.sdk.resources.Resource;
 import io.opentelemetry.semconv.ServiceAttributes;
-import io.truemark.otel.core.filters.OtelConfigFilter;
+import io.truemark.otel.core.filters.LoggingOtelConfigFilter;
+import io.truemark.otel.core.filters.MetricsOtelConfigFilter;
+import io.truemark.otel.core.filters.OtelConfigFilterChain;
+import io.truemark.otel.core.filters.TracingOtelConfigFilter;
 import io.truemark.otel.core.models.OpenTelemetrySetupData;
-import java.util.List;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.logging.Logger;
 
@@ -22,22 +25,25 @@ public class OpenTelemetryStartupConfig {
 
   private final OpenTelemetrySetupData otelSetupData;
   private OpenTelemetry openTelemetry;
-  private final List<OtelConfigFilter> filters;
 
   public OpenTelemetryStartupConfig(final OpenTelemetrySetupData otelSetupData) {
     this.otelSetupData =
         Objects.requireNonNull(otelSetupData, "OpenTelemetrySetupData must be provided");
-    this.filters = OtelConfigFilter.REGISTERED_OTEL_CONFIG_FILTERS;
     this.initialize();
   }
 
   private void initialize() {
+
+    final OtelConfigFilterChain filterChain =
+        new OtelConfigFilterChain(
+            Arrays.asList(
+                new TracingOtelConfigFilter(),
+                new MetricsOtelConfigFilter(),
+                new LoggingOtelConfigFilter()));
     final OpenTelemetrySdkBuilder openTelemetryBuilder = OpenTelemetrySdk.builder();
     final Resource resource = createResource();
 
-    for (OtelConfigFilter filter : filters) {
-      filter.apply(openTelemetryBuilder, resource, otelSetupData);
-    }
+    filterChain.doFilter(openTelemetryBuilder, resource, otelSetupData);
 
     openTelemetryBuilder.setPropagators(
         ContextPropagators.create(W3CTraceContextPropagator.getInstance()));

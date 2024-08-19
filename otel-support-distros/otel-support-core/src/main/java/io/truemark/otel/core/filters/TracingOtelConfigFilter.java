@@ -16,7 +16,10 @@ public class TracingOtelConfigFilter implements OtelConfigFilter {
 
   @Override
   public void apply(
-      OpenTelemetrySdkBuilder builder, Resource resource, OpenTelemetrySetupData setupData) {
+      final OpenTelemetrySdkBuilder builder,
+      final Resource resource,
+      OpenTelemetrySetupData setupData,
+      final OtelConfigFilterChain filterChain) {
     if (setupData.getOtelTracingConfig().isTracingEnabled()) {
       SpanExporter spanExporter =
           setupData.getOtlpConfig().isOtlpEnabled()
@@ -32,5 +35,6 @@ public class TracingOtelConfigFilter implements OtelConfigFilter {
     } else {
       log.info("Otel Tracing is disabled");
     }
+    filterChain.doFilter(builder, resource, setupData);
   }
 }

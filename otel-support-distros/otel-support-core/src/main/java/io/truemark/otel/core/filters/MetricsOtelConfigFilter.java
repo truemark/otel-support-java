@@ -16,7 +16,10 @@ public class MetricsOtelConfigFilter implements OtelConfigFilter {
 
   @Override
   public void apply(
-      OpenTelemetrySdkBuilder builder, Resource resource, OpenTelemetrySetupData setupData) {
+      final OpenTelemetrySdkBuilder builder,
+      final Resource resource,
+      final OpenTelemetrySetupData setupData,
+      final OtelConfigFilterChain filterChain) {
     if (setupData.getOtelMeterConfig().isMeterEnabled()) {
       MetricExporter metricExporter =
           setupData.getOtlpConfig().isOtlpEnabled()
@@ -32,5 +35,6 @@ public class MetricsOtelConfigFilter implements OtelConfigFilter {
     } else {
       log.info("Otel Meter is disabled");
     }
+    filterChain.doFilter(builder, resource, setupData);
   }
 }

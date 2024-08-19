@@ -16,7 +16,10 @@ public class LoggingOtelConfigFilter implements OtelConfigFilter {
 
   @Override
   public void apply(
-      OpenTelemetrySdkBuilder builder, Resource resource, OpenTelemetrySetupData setupData) {
+      final OpenTelemetrySdkBuilder builder,
+      final Resource resource,
+      final OpenTelemetrySetupData setupData,
+      final OtelConfigFilterChain filterChain) {
     if (setupData.getOtelLoggingConfig().isLoggingEnabled()) {
       LogRecordExporter logRecordExporter = OtlpGrpcLogRecordExporter.builder().build();
       SdkLoggerProvider sdkLoggerProvider =
@@ -26,5 +29,6 @@ public class LoggingOtelConfigFilter implements OtelConfigFilter {
     } else {
       log.info("Otel Logging is disabled");
     }
+    filterChain.doFilter(builder, resource, setupData);
   }
 }
