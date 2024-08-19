@@ -39,16 +39,11 @@ public class OpenTelemetryStartupConfig {
     this.initialize();
   }
 
+  // Initialize the OpenTelemetry SDK
   private void initialize() {
-
-    final OtelConfigFilterChain filterChain =
-        new OtelConfigFilterChain(
-            Arrays.asList(
-                new TracingOtelConfigFilter(),
-                new MetricsOtelConfigFilter(),
-                new LoggingOtelConfigFilter()));
-    final OpenTelemetrySdkBuilder openTelemetryBuilder = OpenTelemetrySdk.builder();
-    final Resource resource = createResource(otelSetupData.getAdditionalResources());
+    OtelConfigFilterChain filterChain = createFilterChain();
+    OpenTelemetrySdkBuilder openTelemetryBuilder = OpenTelemetrySdk.builder();
+    Resource resource = createResource(otelSetupData.getAdditionalResources());
 
     filterChain.doFilter(openTelemetryBuilder, resource, otelSetupData);
 
@@ -57,9 +52,18 @@ public class OpenTelemetryStartupConfig {
     this.openTelemetry = openTelemetryBuilder.buildAndRegisterGlobal();
   }
 
-  private Resource createResource(List<Resource> additionalResources) {
+  // Create a filter chain with tracing, metrics, and logging filters
+  private OtelConfigFilterChain createFilterChain() {
+    return new OtelConfigFilterChain(
+        Arrays.asList(
+            new TracingOtelConfigFilter(),
+            new MetricsOtelConfigFilter(),
+            new LoggingOtelConfigFilter()));
+  }
 
-    final Resource resource =
+  // Create a resource with default and additional attributes
+  private Resource createResource(List<Resource> additionalResources) {
+    Resource resource =
         Resource.getDefault()
             .merge(ContainerResource.get())
             .merge(HostResource.get())
@@ -74,8 +78,11 @@ public class OpenTelemetryStartupConfig {
                             SERVICE_VERSION_KEY,
                             otelSetupData.getServiceConfig().getServiceVertion())
                         .build()));
+
     if (additionalResources != null && !additionalResources.isEmpty()) {
-      additionalResources.forEach(resource::merge);
+      for (Resource additionalResource : additionalResources) {
+        resource = resource.merge(additionalResource);
+      }
     }
     return resource;
   }

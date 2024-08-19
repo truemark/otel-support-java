@@ -22,6 +22,19 @@ public final class SdkMeterProviderCreator {
     final List<MetricViewHolder> metricViewHolders = otelMeterConfig.getMetricViewHolders();
     final SdkMeterProviderBuilder meterProviderBuilder = SdkMeterProvider.builder();
 
+    registerMetricReaders(meterProviderBuilder, metricExporters);
+    registerMetricViews(meterProviderBuilder, metricViewHolders);
+
+    if (defaultResource != null) {
+      meterProviderBuilder.addResource(defaultResource);
+    }
+
+    return meterProviderBuilder.build();
+  }
+
+  // Register metric readers from the provided metric exporters
+  private static void registerMetricReaders(
+      SdkMeterProviderBuilder meterProviderBuilder, List<MetricExporterHolder> metricExporters) {
     if (metricExporters != null && !metricExporters.isEmpty()) {
       metricExporters.forEach(
           metricExporterHolder -> {
@@ -33,18 +46,16 @@ public final class SdkMeterProviderCreator {
             }
           });
     }
+  }
 
+  // Register metric views from the provided metric view holders
+  private static void registerMetricViews(
+      SdkMeterProviderBuilder meterProviderBuilder, List<MetricViewHolder> metricViewHolders) {
     if (metricViewHolders != null && !metricViewHolders.isEmpty()) {
       metricViewHolders.forEach(
           metricViewHolder ->
               meterProviderBuilder.registerView(
                   metricViewHolder.getSelector(), metricViewHolder.getView()));
     }
-
-    if (defaultResource != null) {
-      meterProviderBuilder.addResource(defaultResource);
-    }
-
-    return meterProviderBuilder.build();
   }
 }

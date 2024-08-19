@@ -21,20 +21,25 @@ public class TracingOtelConfigFilter implements OtelConfigFilter {
       OpenTelemetrySetupData setupData,
       final OtelConfigFilterChain filterChain) {
     if (setupData.getOtelTracingConfig().isTracingEnabled()) {
-      SpanExporter spanExporter =
-          setupData.getOtlpConfig().isOtlpEnabled()
-              ? OtlpGrpcSpanExporter.builder()
-                  .setEndpoint(setupData.getOtlpConfig().getOtlpEndpoint())
-                  .build()
-              : OtlpGrpcSpanExporter.builder().build();
-
-      SdkTracerProvider sdkTracerProvider =
-          SdkTracerProviderCreator.createTracerProvider(
-              resource, spanExporter, setupData.getOtelTracingConfig());
+      SdkTracerProvider sdkTracerProvider = createSdkTracerProvider(resource, setupData);
       builder.setTracerProvider(sdkTracerProvider);
     } else {
       log.info("Otel Tracing is disabled");
     }
     filterChain.doFilter(builder, resource, setupData);
+  }
+
+  // Create SdkTracerProvider based on the setup data
+  private SdkTracerProvider createSdkTracerProvider(
+      Resource resource, OpenTelemetrySetupData setupData) {
+    SpanExporter spanExporter =
+        setupData.getOtlpConfig().isOtlpEnabled()
+            ? OtlpGrpcSpanExporter.builder()
+                .setEndpoint(setupData.getOtlpConfig().getOtlpEndpoint())
+                .build()
+            : OtlpGrpcSpanExporter.builder().build();
+
+    return SdkTracerProviderCreator.createTracerProvider(
+        resource, spanExporter, setupData.getOtelTracingConfig());
   }
 }

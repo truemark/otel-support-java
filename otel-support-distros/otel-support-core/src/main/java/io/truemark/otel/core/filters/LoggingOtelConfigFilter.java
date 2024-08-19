@@ -21,14 +21,19 @@ public class LoggingOtelConfigFilter implements OtelConfigFilter {
       final OpenTelemetrySetupData setupData,
       final OtelConfigFilterChain filterChain) {
     if (setupData.getOtelLoggingConfig().isLoggingEnabled()) {
-      LogRecordExporter logRecordExporter = OtlpGrpcLogRecordExporter.builder().build();
-      SdkLoggerProvider sdkLoggerProvider =
-          SdkLoggerProviderCreator.createLoggerProvider(
-              resource, logRecordExporter, setupData.getOtelLoggingConfig().isBatchingEnabled());
+      SdkLoggerProvider sdkLoggerProvider = createSdkLoggerProvider(resource, setupData);
       builder.setLoggerProvider(sdkLoggerProvider);
     } else {
       log.info("Otel Logging is disabled");
     }
     filterChain.doFilter(builder, resource, setupData);
+  }
+
+  // Create SdkLoggerProvider based on the setup data
+  private SdkLoggerProvider createSdkLoggerProvider(
+      Resource resource, OpenTelemetrySetupData setupData) {
+    LogRecordExporter logRecordExporter = OtlpGrpcLogRecordExporter.builder().build();
+    return SdkLoggerProviderCreator.createLoggerProvider(
+        resource, logRecordExporter, setupData.getOtelLoggingConfig().isBatchingEnabled());
   }
 }

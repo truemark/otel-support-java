@@ -1,3 +1,4 @@
+// SdkTracerProviderCreator.java
 package io.truemark.otel.core.creators;
 
 import io.opentelemetry.sdk.resources.Resource;
@@ -19,10 +20,30 @@ public final class SdkTracerProviderCreator {
       final SpanExporter spanExporter,
       final OtelTracingConfigData tracingConfig) {
     final SdkTracerProviderBuilder tracerProviderBuilder = SdkTracerProvider.builder();
+
+    setSampler(tracerProviderBuilder, tracingConfig);
+    addSpanProcessors(tracerProviderBuilder, spanExporter, tracingConfig);
+
+    if (defaultResource != null) {
+      tracerProviderBuilder.addResource(defaultResource);
+    }
+
+    return tracerProviderBuilder.build();
+  }
+
+  // Set the sampler if it is provided in the tracing configuration
+  private static void setSampler(
+      SdkTracerProviderBuilder tracerProviderBuilder, OtelTracingConfigData tracingConfig) {
     if (tracingConfig.getSampler() != null) {
       tracerProviderBuilder.setSampler(tracingConfig.getSampler());
     }
+  }
 
+  // Add span processors based on the tracing configuration
+  private static void addSpanProcessors(
+      SdkTracerProviderBuilder tracerProviderBuilder,
+      SpanExporter spanExporter,
+      OtelTracingConfigData tracingConfig) {
     tracingConfig
         .getTraceSpanExporters()
         .forEach(
@@ -32,10 +53,5 @@ public final class SdkTracerProviderCreator {
                       ? BatchSpanProcessor.builder(spanExporter).build()
                       : SimpleSpanProcessor.builder(spanExporter).build());
             });
-
-    if (defaultResource != null) {
-      tracerProviderBuilder.addResource(defaultResource);
-    }
-    return tracerProviderBuilder.build();
   }
 }
