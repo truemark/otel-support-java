@@ -8,7 +8,7 @@ import io.opentelemetry.sdk.OpenTelemetrySdk;
 import io.opentelemetry.sdk.OpenTelemetrySdkBuilder;
 import io.opentelemetry.sdk.resources.Resource;
 import io.opentelemetry.semconv.ServiceAttributes;
-import io.truemark.otel.core.filters.OpenTelemetryConfigFilter;
+import io.truemark.otel.core.filters.OtelConfigFilter;
 import io.truemark.otel.core.models.OpenTelemetrySetupData;
 import java.util.List;
 import java.util.Objects;
@@ -22,12 +22,12 @@ public class OpenTelemetryStartupConfig {
 
   private final OpenTelemetrySetupData otelSetupData;
   private OpenTelemetry openTelemetry;
-  private final List<OpenTelemetryConfigFilter> filters;
+  private final List<OtelConfigFilter> filters;
 
   public OpenTelemetryStartupConfig(final OpenTelemetrySetupData otelSetupData) {
     this.otelSetupData =
         Objects.requireNonNull(otelSetupData, "OpenTelemetrySetupData must be provided");
-    this.filters = OpenTelemetryConfigFilter.REGISTERED_OTEL_CONFIG_FILTERS;
+    this.filters = OtelConfigFilter.REGISTERED_OTEL_CONFIG_FILTERS;
     this.initialize();
   }
 
@@ -35,7 +35,7 @@ public class OpenTelemetryStartupConfig {
     final OpenTelemetrySdkBuilder openTelemetryBuilder = OpenTelemetrySdk.builder();
     final Resource resource = createResource();
 
-    for (OpenTelemetryConfigFilter filter : filters) {
+    for (OtelConfigFilter filter : filters) {
       filter.apply(openTelemetryBuilder, resource, otelSetupData);
     }
 

@@ -1,4 +1,4 @@
-// TracingConfigFilter.java
+// TracingOtelConfigFilter.java
 package io.truemark.otel.core.filters;
 
 import io.opentelemetry.exporter.otlp.trace.OtlpGrpcSpanExporter;
@@ -10,9 +10,9 @@ import io.truemark.otel.core.creators.SdkTracerProviderCreator;
 import io.truemark.otel.core.models.OpenTelemetrySetupData;
 import java.util.logging.Logger;
 
-public class TracingConfigFilter implements OpenTelemetryConfigFilter {
+public class TracingOtelConfigFilter implements OtelConfigFilter {
 
-  private static final Logger log = Logger.getLogger(TracingConfigFilter.class.getName());
+  private static final Logger log = Logger.getLogger(TracingOtelConfigFilter.class.getName());
 
   @Override
   public void apply(

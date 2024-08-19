@@ -1,4 +1,4 @@
-// MetricsConfigFilter.java
+// MetricsOtelConfigFilter.java
 package io.truemark.otel.core.filters;
 
 import io.opentelemetry.exporter.otlp.metrics.OtlpGrpcMetricExporter;
@@ -10,9 +10,9 @@ import io.truemark.otel.core.creators.SdkMeterProviderCreator;
 import io.truemark.otel.core.models.OpenTelemetrySetupData;
 import java.util.logging.Logger;
 
-public class MetricsConfigFilter implements OpenTelemetryConfigFilter {
+public class MetricsOtelConfigFilter implements OtelConfigFilter {
 
-  private static final Logger log = Logger.getLogger(MetricsConfigFilter.class.getName());
+  private static final Logger log = Logger.getLogger(MetricsOtelConfigFilter.class.getName());
 
   @Override
   public void apply(
