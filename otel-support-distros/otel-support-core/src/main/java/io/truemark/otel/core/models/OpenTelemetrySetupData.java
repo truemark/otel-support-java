@@ -1,5 +1,7 @@
 package io.truemark.otel.core.models;
 
+import io.opentelemetry.sdk.resources.Resource;
+import java.util.List;
 import java.util.Objects;
 
 public class OpenTelemetrySetupData {
@@ -9,6 +11,7 @@ public class OpenTelemetrySetupData {
   private final OtelTracingConfigData otelTracingConfig;
   private final OtelMeterConfigData otelMeterConfig;
   private final OtelLoggingConfigData otelLoggingConfig;
+  private List<Resource> additionalResources;
 
   public OpenTelemetrySetupData(
       final OtelServiceConfigData serviceConfig,
@@ -63,5 +66,13 @@ public class OpenTelemetrySetupData {
         + ", otelLoggingConfig="
         + otelLoggingConfig
         + '}';
+  }
+
+  public List<Resource> getAdditionalResources() {
+    return additionalResources;
+  }
+
+  public void setAdditionalResources(List<Resource> additionalResources) {
+    this.additionalResources = additionalResources;
   }
 }

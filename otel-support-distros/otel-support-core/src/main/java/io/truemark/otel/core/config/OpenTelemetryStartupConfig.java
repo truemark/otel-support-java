@@ -2,8 +2,14 @@ package io.truemark.otel.core.config;
 
 import io.opentelemetry.api.OpenTelemetry;
 import io.opentelemetry.api.common.AttributeKey;
+import io.opentelemetry.api.common.Attributes;
 import io.opentelemetry.api.trace.propagation.W3CTraceContextPropagator;
 import io.opentelemetry.context.propagation.ContextPropagators;
+import io.opentelemetry.instrumentation.resources.ContainerResource;
+import io.opentelemetry.instrumentation.resources.HostResource;
+import io.opentelemetry.instrumentation.resources.OsResource;
+import io.opentelemetry.instrumentation.resources.ProcessResource;
+import io.opentelemetry.instrumentation.resources.ProcessRuntimeResource;
 import io.opentelemetry.sdk.OpenTelemetrySdk;
 import io.opentelemetry.sdk.OpenTelemetrySdkBuilder;
 import io.opentelemetry.sdk.resources.Resource;
@@ -14,6 +20,7 @@ import io.truemark.otel.core.filters.OtelConfigFilterChain;
 import io.truemark.otel.core.filters.TracingOtelConfigFilter;
 import io.truemark.otel.core.models.OpenTelemetrySetupData;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.logging.Logger;
 
@@ -41,7 +48,7 @@ public class OpenTelemetryStartupConfig {
                 new MetricsOtelConfigFilter(),
                 new LoggingOtelConfigFilter()));
     final OpenTelemetrySdkBuilder openTelemetryBuilder = OpenTelemetrySdk.builder();
-    final Resource resource = createResource();
+    final Resource resource = createResource(otelSetupData.getAdditionalResources());
 
     filterChain.doFilter(openTelemetryBuilder, resource, otelSetupData);
 
@@ -50,11 +57,27 @@ public class OpenTelemetryStartupConfig {
     this.openTelemetry = openTelemetryBuilder.buildAndRegisterGlobal();
   }
 
-  private Resource createResource() {
-    return Resource.getDefault().toBuilder()
-        .put(SERVICE_NAME_KEY, otelSetupData.getServiceConfig().getServiceName())
-        .put(SERVICE_VERSION_KEY, otelSetupData.getServiceConfig().getServiceVertion())
-        .build();
+  private Resource createResource(List<Resource> additionalResources) {
+
+    final Resource resource =
+        Resource.getDefault()
+            .merge(ContainerResource.get())
+            .merge(HostResource.get())
+            .merge(OsResource.get())
+            .merge(ProcessResource.get())
+            .merge(ProcessRuntimeResource.get())
+            .merge(
+                Resource.create(
+                    Attributes.builder()
+                        .put(SERVICE_NAME_KEY, otelSetupData.getServiceConfig().getServiceName())
+                        .put(
+                            SERVICE_VERSION_KEY,
+                            otelSetupData.getServiceConfig().getServiceVertion())
+                        .build()));
+    if (additionalResources != null && !additionalResources.isEmpty()) {
+      additionalResources.forEach(resource::merge);
+    }
+    return resource;
   }
 
   public OpenTelemetry getOpenTelemetry() {
