@@ -1,7 +1,9 @@
 package io.truemark.otel.core.models;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 
+import io.opentelemetry.sdk.trace.export.SpanExporter;
 import java.util.Collections;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -27,9 +29,11 @@ public class OpenTelemetrySetupDataTest {
     OtelServiceConfigData serviceConfig = new OtelServiceConfigData(serviceName, serviceVersion);
     OtelOtlpConfigData otlpConfig = new OtelOtlpConfigData(otlpEnabled, otlpEndpoint);
     OtelTracingConfigData tracingConfig =
-        new OtelTracingConfigData(tracingEnabled, batchingEnabled);
-    OtelMeterConfigData meterConfig =
-        new OtelMeterConfigData(meterEnabled);
+        new OtelTracingConfigData(
+            tracingEnabled,
+            Collections.singletonList(
+                new TraceSpanExporter(batchingEnabled, mock(SpanExporter.class))));
+    OtelMeterConfigData meterConfig = new OtelMeterConfigData(meterEnabled);
     OtelLoggingConfigData loggingConfig =
         new OtelLoggingConfigData(loggingEnabled, loggingBatchingEnabled);
 
@@ -48,7 +52,9 @@ public class OpenTelemetrySetupDataTest {
   public void test_OpenTelemetrySetupDataConstructor_givenNullInputValues() {
     OtelServiceConfigData serviceConfig = new OtelServiceConfigData("test-service", "1.0.0");
     OtelOtlpConfigData otlpConfig = new OtelOtlpConfigData(true, "http://localhost:4317");
-    OtelTracingConfigData tracingConfig = new OtelTracingConfigData(true, true);
+    OtelTracingConfigData tracingConfig =
+        new OtelTracingConfigData(
+            true, Collections.singletonList(new TraceSpanExporter(true, mock(SpanExporter.class))));
     OtelMeterConfigData meterConfig = new OtelMeterConfigData(true);
     OtelLoggingConfigData loggingConfig = new OtelLoggingConfigData(true, true);
 

@@ -6,7 +6,6 @@ import io.opentelemetry.sdk.metrics.export.MetricExporter;
 import io.opentelemetry.sdk.metrics.export.PeriodicMetricReader;
 import io.opentelemetry.sdk.resources.Resource;
 import io.truemark.otel.core.models.MetricView;
-
 import java.util.List;
 
 public final class SdkMeterProviderCreator {

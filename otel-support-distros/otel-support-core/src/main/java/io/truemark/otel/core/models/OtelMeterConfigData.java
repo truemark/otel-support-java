@@ -18,9 +18,10 @@ public class OtelMeterConfigData {
     return metricViews;
   }
 
-    public void setMetricViews(List<MetricView> metricViews) {
-        this.metricViews = metricViews;
-    }
+  public void setMetricViews(List<MetricView> metricViews) {
+    this.metricViews = metricViews;
+  }
+
   @Override
   public String toString() {
     return "OtelMeterConfigData{"

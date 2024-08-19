@@ -1,23 +1,24 @@
 package io.truemark.otel.core.models;
 
 import io.opentelemetry.sdk.trace.samplers.Sampler;
+import java.util.List;
 
 public class OtelTracingConfigData {
   private final boolean tracingEnabled;
-  private final boolean isBatchingEnabled;
+  private final List<TraceSpanExporter> traceSpanExporters;
   private Sampler sampler;
 
-  public OtelTracingConfigData(boolean tracingEnabled, boolean isBatchingEnabled) {
+  public OtelTracingConfigData(boolean tracingEnabled, List<TraceSpanExporter> traceSpanExporters) {
     this.tracingEnabled = tracingEnabled;
-    this.isBatchingEnabled = isBatchingEnabled;
+    this.traceSpanExporters = traceSpanExporters;
   }
 
   public boolean isTracingEnabled() {
     return tracingEnabled;
   }
 
-  public boolean isBatchingEnabled() {
-    return isBatchingEnabled;
+  public List<TraceSpanExporter> getTraceSpanExporters() {
+    return traceSpanExporters;
   }
 
   public Sampler getSampler() {
@@ -33,8 +34,8 @@ public class OtelTracingConfigData {
     return "OtelTracingConfigData{"
         + "tracingEnabled="
         + tracingEnabled
-        + ", isBatchingEnabled="
-        + isBatchingEnabled
+        + ", traceSpanExporters="
+        + traceSpanExporters
         + ", sampler="
         + sampler
         + '}';

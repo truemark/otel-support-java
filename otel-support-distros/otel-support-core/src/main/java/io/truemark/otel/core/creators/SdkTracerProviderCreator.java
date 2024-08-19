@@ -18,18 +18,22 @@ public final class SdkTracerProviderCreator {
       final Resource resource,
       final SpanExporter spanExporter,
       final OtelTracingConfigData tracingConfig) {
-    final boolean isBatchingEnabled = tracingConfig.isBatchingEnabled();
-    final SdkTracerProviderBuilder tracerProviderBuilder =
-        SdkTracerProvider.builder()
-            .addSpanProcessor(
-                isBatchingEnabled
-                    ? BatchSpanProcessor.builder(spanExporter).build()
-                    : SimpleSpanProcessor.builder(spanExporter).build())
-            .setResource(resource);
-
+    final SdkTracerProviderBuilder tracerProviderBuilder = SdkTracerProvider.builder();
     if (tracingConfig.getSampler() != null) {
       tracerProviderBuilder.setSampler(tracingConfig.getSampler());
     }
+
+    tracingConfig
+        .getTraceSpanExporters()
+        .forEach(
+            traceSpanExporter -> {
+              tracerProviderBuilder.addSpanProcessor(
+                  traceSpanExporter.isBatchingEnabled()
+                      ? BatchSpanProcessor.builder(spanExporter).build()
+                      : SimpleSpanProcessor.builder(spanExporter).build());
+            });
+
+    tracerProviderBuilder.setResource(resource);
     return tracerProviderBuilder.build();
   }
 }
