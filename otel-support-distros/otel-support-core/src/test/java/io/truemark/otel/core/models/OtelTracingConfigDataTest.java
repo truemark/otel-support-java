@@ -17,8 +17,8 @@ import org.junit.jupiter.params.provider.MethodSource;
 public class OtelTracingConfigDataTest {
 
   static Stream<Arguments> provideTracingConfigData() {
-    TraceSpanExporter mockExporter1 = mock(TraceSpanExporter.class);
-    TraceSpanExporter mockExporter2 = mock(TraceSpanExporter.class);
+    SpanExporterHolder mockExporter1 = mock(SpanExporterHolder.class);
+    SpanExporterHolder mockExporter2 = mock(SpanExporterHolder.class);
     Sampler mockSampler = mock(Sampler.class);
 
     return Stream.of(
@@ -32,15 +32,15 @@ public class OtelTracingConfigDataTest {
   @MethodSource("provideTracingConfigData")
   public void test_OtelTracingConfigDataConstructorAndGetters_givenVaryingInputs(
       boolean tracingEnabled,
-      List<TraceSpanExporter> traceSpanExporters,
+      List<SpanExporterHolder> spanExporterHolders,
       Optional<Sampler> sampler) {
     OtelTracingConfigData configData =
-        new OtelTracingConfigData(tracingEnabled, traceSpanExporters);
+        new OtelTracingConfigData(tracingEnabled, spanExporterHolders);
     sampler.ifPresent(configData::setSampler);
 
     assertNotNull(configData.toString());
     assertEquals(tracingEnabled, configData.isTracingEnabled());
-    assertEquals(traceSpanExporters, configData.getTraceSpanExporters());
+    assertEquals(spanExporterHolders, configData.getTraceSpanExporters());
     assertEquals(sampler.orElse(null), configData.getSampler());
   }
 }

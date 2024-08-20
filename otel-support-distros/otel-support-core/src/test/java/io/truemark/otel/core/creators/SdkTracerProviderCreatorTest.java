@@ -7,7 +7,7 @@ import io.opentelemetry.sdk.resources.Resource;
 import io.opentelemetry.sdk.trace.SdkTracerProvider;
 import io.opentelemetry.sdk.trace.export.SpanExporter;
 import io.truemark.otel.core.models.OtelTracingConfigData;
-import io.truemark.otel.core.models.TraceSpanExporter;
+import io.truemark.otel.core.models.SpanExporterHolder;
 import java.util.Collections;
 import java.util.stream.Stream;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -21,10 +21,10 @@ public class SdkTracerProviderCreatorTest {
     return Stream.of(
         Arguments.of(
             new OtelTracingConfigData(
-                true, Collections.singletonList(new TraceSpanExporter(true, mockSpanExporter)))),
+                true, Collections.singletonList(new SpanExporterHolder(true, mockSpanExporter)))),
         Arguments.of(
             new OtelTracingConfigData(
-                true, Collections.singletonList(new TraceSpanExporter(false, mockSpanExporter)))),
+                true, Collections.singletonList(new SpanExporterHolder(false, mockSpanExporter)))),
         Arguments.of(new OtelTracingConfigData(true, Collections.emptyList())),
         Arguments.of(new OtelTracingConfigData(true, Collections.emptyList())));
   }

@@ -33,7 +33,7 @@ public class OpenTelemetrySetupDataTest {
         new OtelTracingConfigData(
             tracingEnabled,
             Collections.singletonList(
-                new TraceSpanExporter(batchingEnabled, mock(SpanExporter.class))));
+                new SpanExporterHolder(batchingEnabled, mock(SpanExporter.class))));
     OtelMeterConfigData meterConfig =
         new OtelMeterConfigData(meterEnabled, Collections.emptyList());
     OtelLoggingConfigData loggingConfig =
@@ -56,7 +56,8 @@ public class OpenTelemetrySetupDataTest {
     OtelOtlpConfigData otlpConfig = new OtelOtlpConfigData(true, "http://localhost:4317");
     OtelTracingConfigData tracingConfig =
         new OtelTracingConfigData(
-            true, Collections.singletonList(new TraceSpanExporter(true, mock(SpanExporter.class))));
+            true,
+            Collections.singletonList(new SpanExporterHolder(true, mock(SpanExporter.class))));
     OtelMeterConfigData meterConfig = new OtelMeterConfigData(true, Collections.emptyList());
     OtelLoggingConfigData loggingConfig = new OtelLoggingConfigData(true, true);
 

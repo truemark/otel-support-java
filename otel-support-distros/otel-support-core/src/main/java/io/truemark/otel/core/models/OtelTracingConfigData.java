@@ -5,20 +5,21 @@ import java.util.List;
 
 public class OtelTracingConfigData {
   private final boolean tracingEnabled;
-  private final List<TraceSpanExporter> traceSpanExporters;
+  private final List<SpanExporterHolder> spanExporterHolders;
   private Sampler sampler;
 
-  public OtelTracingConfigData(boolean tracingEnabled, List<TraceSpanExporter> traceSpanExporters) {
+  public OtelTracingConfigData(
+      boolean tracingEnabled, List<SpanExporterHolder> spanExporterHolders) {
     this.tracingEnabled = tracingEnabled;
-    this.traceSpanExporters = traceSpanExporters;
+    this.spanExporterHolders = spanExporterHolders;
   }
 
   public boolean isTracingEnabled() {
     return tracingEnabled;
   }
 
-  public List<TraceSpanExporter> getTraceSpanExporters() {
-    return traceSpanExporters;
+  public List<SpanExporterHolder> getTraceSpanExporters() {
+    return spanExporterHolders;
   }
 
   public Sampler getSampler() {
@@ -34,8 +35,8 @@ public class OtelTracingConfigData {
     return "OtelTracingConfigData{"
         + "tracingEnabled="
         + tracingEnabled
-        + ", traceSpanExporters="
-        + traceSpanExporters
+        + ", spanExporterHolders="
+        + spanExporterHolders
         + ", sampler="
         + sampler
         + '}';

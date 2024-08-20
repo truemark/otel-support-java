@@ -12,7 +12,7 @@ import io.truemark.otel.core.models.OtelMeterConfigData;
 import io.truemark.otel.core.models.OtelOtlpConfigData;
 import io.truemark.otel.core.models.OtelServiceConfigData;
 import io.truemark.otel.core.models.OtelTracingConfigData;
-import io.truemark.otel.core.models.TraceSpanExporter;
+import io.truemark.otel.core.models.SpanExporterHolder;
 import java.util.Collections;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,7 +40,8 @@ public class OpenTelemetryStartupConfigTest {
     otlpConfig = new OtelOtlpConfigData(true, "http://localhost:4317");
     tracingConfig =
         new OtelTracingConfigData(
-            true, Collections.singletonList(new TraceSpanExporter(true, mock(SpanExporter.class))));
+            true,
+            Collections.singletonList(new SpanExporterHolder(true, mock(SpanExporter.class))));
     meterConfig = new OtelMeterConfigData(true, Collections.emptyList());
     loggingConfig = new OtelLoggingConfigData(true, true);
 
@@ -72,7 +73,7 @@ public class OpenTelemetryStartupConfigTest {
         new OtelTracingConfigData(
             tracingEnabled,
             Collections.singletonList(
-                new TraceSpanExporter(batchingEnabled, mock(SpanExporter.class))));
+                new SpanExporterHolder(batchingEnabled, mock(SpanExporter.class))));
     meterConfig = new OtelMeterConfigData(meterEnabled, Collections.emptyList());
     loggingConfig = new OtelLoggingConfigData(loggingEnabled, batchingEnabled);
 

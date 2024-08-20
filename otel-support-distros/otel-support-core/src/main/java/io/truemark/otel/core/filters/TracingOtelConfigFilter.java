@@ -9,7 +9,7 @@ import io.opentelemetry.sdk.trace.export.SpanExporter;
 import io.truemark.otel.core.creators.SdkTracerProviderCreator;
 import io.truemark.otel.core.models.OpenTelemetrySetupData;
 import io.truemark.otel.core.models.OtelTracingConfigData;
-import io.truemark.otel.core.models.TraceSpanExporter;
+import io.truemark.otel.core.models.SpanExporterHolder;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
@@ -37,9 +37,9 @@ public class TracingOtelConfigFilter implements OtelConfigFilter {
   private SdkTracerProvider createSdkTracerProvider(
       final Resource resource, final OpenTelemetrySetupData setupData) {
     final OtelTracingConfigData otelTracingConfig;
-    final List<TraceSpanExporter> traceSpanExporters =
+    final List<SpanExporterHolder> spanExporterHolders =
         setupData.getOtelTracingConfig().getTraceSpanExporters();
-    if (traceSpanExporters == null || traceSpanExporters.isEmpty()) {
+    if (spanExporterHolders == null || spanExporterHolders.isEmpty()) {
       final SpanExporter spanExporter =
           setupData.getOtlpConfig().isOtlpEnabled()
               ? OtlpGrpcSpanExporter.builder()
@@ -48,7 +48,7 @@ public class TracingOtelConfigFilter implements OtelConfigFilter {
               : OtlpGrpcSpanExporter.builder().build();
       otelTracingConfig =
           new OtelTracingConfigData(
-              true, Collections.singletonList(new TraceSpanExporter(true, spanExporter)));
+              true, Collections.singletonList(new SpanExporterHolder(true, spanExporter)));
     } else {
       otelTracingConfig = setupData.getOtelTracingConfig();
     }
