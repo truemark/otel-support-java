@@ -8,6 +8,10 @@ import io.opentelemetry.sdk.trace.SdkTracerProvider;
 import io.opentelemetry.sdk.trace.export.SpanExporter;
 import io.truemark.otel.core.creators.SdkTracerProviderCreator;
 import io.truemark.otel.core.models.OpenTelemetrySetupData;
+import io.truemark.otel.core.models.OtelTracingConfigData;
+import io.truemark.otel.core.models.TraceSpanExporter;
+import java.util.Collections;
+import java.util.List;
 import java.util.logging.Logger;
 
 public class TracingOtelConfigFilter implements OtelConfigFilter {
@@ -18,7 +22,7 @@ public class TracingOtelConfigFilter implements OtelConfigFilter {
   public void apply(
       final OpenTelemetrySdkBuilder builder,
       final Resource resource,
-      OpenTelemetrySetupData setupData,
+      final OpenTelemetrySetupData setupData,
       final OtelConfigFilterChain filterChain) {
     if (setupData.getOtelTracingConfig().isTracingEnabled()) {
       SdkTracerProvider sdkTracerProvider = createSdkTracerProvider(resource, setupData);
@@ -31,15 +35,24 @@ public class TracingOtelConfigFilter implements OtelConfigFilter {
 
   // Create SdkTracerProvider based on the setup data
   private SdkTracerProvider createSdkTracerProvider(
-      Resource resource, OpenTelemetrySetupData setupData) {
-    SpanExporter spanExporter =
-        setupData.getOtlpConfig().isOtlpEnabled()
-            ? OtlpGrpcSpanExporter.builder()
-                .setEndpoint(setupData.getOtlpConfig().getOtlpEndpoint())
-                .build()
-            : OtlpGrpcSpanExporter.builder().build();
+      final Resource resource, final OpenTelemetrySetupData setupData) {
+    final OtelTracingConfigData otelTracingConfig;
+    final List<TraceSpanExporter> traceSpanExporters =
+        setupData.getOtelTracingConfig().getTraceSpanExporters();
+    if (traceSpanExporters == null || traceSpanExporters.isEmpty()) {
+      final SpanExporter spanExporter =
+          setupData.getOtlpConfig().isOtlpEnabled()
+              ? OtlpGrpcSpanExporter.builder()
+                  .setEndpoint(setupData.getOtlpConfig().getOtlpEndpoint())
+                  .build()
+              : OtlpGrpcSpanExporter.builder().build();
+      otelTracingConfig =
+          new OtelTracingConfigData(
+              true, Collections.singletonList(new TraceSpanExporter(true, spanExporter)));
+    } else {
+      otelTracingConfig = setupData.getOtelTracingConfig();
+    }
 
-    return SdkTracerProviderCreator.createTracerProvider(
-        resource, spanExporter, setupData.getOtelTracingConfig());
+    return SdkTracerProviderCreator.createTracerProvider(resource, otelTracingConfig);
   }
 }

@@ -6,7 +6,6 @@ import io.opentelemetry.sdk.trace.SdkTracerProvider;
 import io.opentelemetry.sdk.trace.SdkTracerProviderBuilder;
 import io.opentelemetry.sdk.trace.export.BatchSpanProcessor;
 import io.opentelemetry.sdk.trace.export.SimpleSpanProcessor;
-import io.opentelemetry.sdk.trace.export.SpanExporter;
 import io.truemark.otel.core.models.OtelTracingConfigData;
 
 public final class SdkTracerProviderCreator {
@@ -16,13 +15,11 @@ public final class SdkTracerProviderCreator {
   }
 
   public static SdkTracerProvider createTracerProvider(
-      final Resource defaultResource,
-      final SpanExporter spanExporter,
-      final OtelTracingConfigData tracingConfig) {
+      final Resource defaultResource, final OtelTracingConfigData tracingConfig) {
     final SdkTracerProviderBuilder tracerProviderBuilder = SdkTracerProvider.builder();
 
     setSampler(tracerProviderBuilder, tracingConfig);
-    addSpanProcessors(tracerProviderBuilder, spanExporter, tracingConfig);
+    addSpanProcessors(tracerProviderBuilder, tracingConfig);
 
     if (defaultResource != null) {
       tracerProviderBuilder.addResource(defaultResource);
@@ -41,17 +38,15 @@ public final class SdkTracerProviderCreator {
 
   // Add span processors based on the tracing configuration
   private static void addSpanProcessors(
-      SdkTracerProviderBuilder tracerProviderBuilder,
-      SpanExporter spanExporter,
-      OtelTracingConfigData tracingConfig) {
+      SdkTracerProviderBuilder tracerProviderBuilder, OtelTracingConfigData tracingConfig) {
     tracingConfig
         .getTraceSpanExporters()
         .forEach(
             traceSpanExporter -> {
               tracerProviderBuilder.addSpanProcessor(
                   traceSpanExporter.isBatchingEnabled()
-                      ? BatchSpanProcessor.builder(spanExporter).build()
-                      : SimpleSpanProcessor.builder(spanExporter).build());
+                      ? BatchSpanProcessor.builder(traceSpanExporter.getSpanExporter()).build()
+                      : SimpleSpanProcessor.builder(traceSpanExporter.getSpanExporter()).build());
             });
   }
 }
