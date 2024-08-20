@@ -14,7 +14,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-public class OtelTracingConfigDataTest {
+class OtelTracingConfigDataTest {
 
   static Stream<Arguments> provideTracingConfigData() {
     SpanExporterHolder mockExporter1 = mock(SpanExporterHolder.class);
@@ -30,7 +30,7 @@ public class OtelTracingConfigDataTest {
 
   @ParameterizedTest
   @MethodSource("provideTracingConfigData")
-  public void test_OtelTracingConfigDataConstructorAndGetters_givenVaryingInputs(
+  void test_OtelTracingConfigDataConstructorAndGetters_givenVaryingInputs(
       boolean tracingEnabled,
       List<SpanExporterHolder> spanExporterHolders,
       Optional<Sampler> sampler) {

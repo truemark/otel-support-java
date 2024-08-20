@@ -14,7 +14,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-public class SdkTracerProviderCreatorTest {
+class SdkTracerProviderCreatorTest {
 
   static Stream<Arguments> batchingEnabledProvider() {
     final SpanExporter mockSpanExporter = mock(SpanExporter.class);
@@ -31,8 +31,7 @@ public class SdkTracerProviderCreatorTest {
 
   @ParameterizedTest
   @MethodSource("batchingEnabledProvider")
-  public void test_createTracerProvider_givenVaryingInputs(
-      final OtelTracingConfigData tracingConfig) {
+  void test_createTracerProvider_givenVaryingInputs(final OtelTracingConfigData tracingConfig) {
     Resource mockResource = mock(Resource.class);
     SdkTracerProvider tracerProvider =
         SdkTracerProviderCreator.createTracerProvider(mockResource, tracingConfig);

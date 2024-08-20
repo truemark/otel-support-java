@@ -14,7 +14,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-public class SdkLoggerProviderCreatorTest {
+class SdkLoggerProviderCreatorTest {
 
   private static Stream<Arguments> loggerProvider() {
     LogRecordExporter mockLogRecordExporter = mock(LogRecordExporter.class);
@@ -35,8 +35,7 @@ public class SdkLoggerProviderCreatorTest {
 
   @ParameterizedTest
   @MethodSource("loggerProvider")
-  public void test_createLoggerProvider_givenVaryingInputs(
-      OtelLoggingConfigData otelLoggingConfig) {
+  void test_createLoggerProvider_givenVaryingInputs(OtelLoggingConfigData otelLoggingConfig) {
     Resource mockResource = mock(Resource.class);
 
     SdkLoggerProvider loggerProvider =

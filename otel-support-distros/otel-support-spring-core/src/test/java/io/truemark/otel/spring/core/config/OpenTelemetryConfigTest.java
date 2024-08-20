@@ -32,7 +32,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.core.env.Environment;
 
 @ExtendWith(MockitoExtension.class)
-public class OpenTelemetryConfigTest {
+class OpenTelemetryConfigTest {
 
   @Mock private Environment env;
   @Mock private OtelTracingSpanExportersRegistry tracingSpanExportersRegistry;
@@ -44,12 +44,12 @@ public class OpenTelemetryConfigTest {
   private OpenTelemetryConfig openTelemetryConfig;
 
   @BeforeEach
-  public void setUp() {
+  void setUp() {
     openTelemetryConfig = new OpenTelemetryConfig(env);
   }
 
   @AfterEach
-  public void tearDown() throws Exception {
+  void tearDown() throws Exception {
     resetGlobalOpenTelemetry();
   }
 

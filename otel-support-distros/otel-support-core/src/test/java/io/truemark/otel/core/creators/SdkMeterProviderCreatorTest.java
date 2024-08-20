@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
-public class SdkMeterProviderCreatorTest {
+class SdkMeterProviderCreatorTest {
 
   static Stream<MetricExporter> metricExporterProvider() {
     return Stream.of(LoggingMetricExporter.create());
@@ -22,7 +22,7 @@ public class SdkMeterProviderCreatorTest {
 
   @ParameterizedTest
   @MethodSource("metricExporterProvider")
-  public void test_createMeterProvider_givenVaryingInputs(MetricExporter metricExporter) {
+  void test_createMeterProvider_givenVaryingInputs(MetricExporter metricExporter) {
     Resource mockResource = mock(Resource.class);
 
     OtelMeterConfigData otelMeterConfigData =

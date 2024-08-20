@@ -11,14 +11,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-public class OpenTelemetrySetupDataTest {
+class OpenTelemetrySetupDataTest {
 
   @ParameterizedTest
   @CsvSource({
     "test-service, 1.0.0, true, http://localhost:4317, true, true, true, true, true, true",
     "test-service, 1.0.0, false, , false, false, false, false, false, false"
   })
-  public void test_OpenTelemetrySetupDataConstructorAndGetters_givenValidInputValues(
+  void test_OpenTelemetrySetupDataConstructorAndGetters_givenValidInputValues(
       String serviceName,
       String serviceVersion,
       boolean otlpEnabled,
@@ -56,7 +56,7 @@ public class OpenTelemetrySetupDataTest {
   }
 
   @Test
-  public void test_OpenTelemetrySetupDataConstructor_givenNullInputValues() {
+  void test_OpenTelemetrySetupDataConstructor_givenNullInputValues() {
     OtelServiceConfigData serviceConfig = new OtelServiceConfigData("test-service", "1.0.0");
     OtelOtlpConfigData otlpConfig = new OtelOtlpConfigData(true, "http://localhost:4317");
     OtelTracingConfigData tracingConfig =

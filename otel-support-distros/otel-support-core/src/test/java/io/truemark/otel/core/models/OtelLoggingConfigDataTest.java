@@ -9,11 +9,11 @@ import java.util.Collections;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-public class OtelLoggingConfigDataTest {
+class OtelLoggingConfigDataTest {
 
   @ParameterizedTest
   @CsvSource({"true, true", "true, false", "false, true", "false, false"})
-  public void test_OtelLoggingConfigDataConstructorAndGetters_givenVaryingInputs(
+  void test_OtelLoggingConfigDataConstructorAndGetters_givenVaryingInputs(
       boolean loggingEnabled, boolean batchingEnabled) {
     OtelLoggingConfigData loggingConfig =
         new OtelLoggingConfigData(

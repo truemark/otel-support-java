@@ -25,7 +25,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 @ExtendWith(MockitoExtension.class)
-public class OpenTelemetryStartupConfigTest {
+class OpenTelemetryStartupConfigTest {
 
   private OpenTelemetrySetupData otelSetupData;
   private OtelServiceConfigData serviceConfig;
@@ -37,7 +37,7 @@ public class OpenTelemetryStartupConfigTest {
   private OpenTelemetryStartupConfig openTelemetryStartupConfig;
 
   @BeforeEach
-  public void setUp() {
+  void setUp() {
     serviceConfig = new OtelServiceConfigData("test-service", "1.0.0");
     otlpConfig = new OtelOtlpConfigData(true, "http://localhost:4317");
     tracingConfig =
@@ -53,7 +53,7 @@ public class OpenTelemetryStartupConfigTest {
   }
 
   @AfterEach
-  public void tearDown() throws Exception {
+  void tearDown() throws Exception {
     resetGlobalOpenTelemetry();
   }
 
@@ -64,7 +64,7 @@ public class OpenTelemetryStartupConfigTest {
     "true, false, false, true, true",
     "false, false, false, false, false"
   })
-  public void test_OpenTelemetryOtlpConfigConstructor_givenVaryingConfigInputs(
+  void test_OpenTelemetryOtlpConfigConstructor_givenVaryingConfigInputs(
       boolean otlpEnabled,
       boolean tracingEnabled,
       boolean batchingEnabled,
@@ -94,7 +94,7 @@ public class OpenTelemetryStartupConfigTest {
   }
 
   @Test
-  public void testGetOpenTelemetry() {
+  void testGetOpenTelemetry() {
     openTelemetryStartupConfig = new OpenTelemetryStartupConfig(otelSetupData);
     OpenTelemetry openTelemetry = openTelemetryStartupConfig.getOpenTelemetry();
     assertNotNull(openTelemetry);
