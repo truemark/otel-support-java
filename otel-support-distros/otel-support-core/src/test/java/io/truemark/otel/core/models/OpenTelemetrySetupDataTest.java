@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 
+import io.opentelemetry.sdk.logs.export.LogRecordExporter;
 import io.opentelemetry.sdk.trace.export.SpanExporter;
 import java.util.Collections;
 import org.junit.jupiter.api.Test;
@@ -37,7 +38,11 @@ public class OpenTelemetrySetupDataTest {
     OtelMeterConfigData meterConfig =
         new OtelMeterConfigData(meterEnabled, Collections.emptyList());
     OtelLoggingConfigData loggingConfig =
-        new OtelLoggingConfigData(loggingEnabled, loggingBatchingEnabled);
+        new OtelLoggingConfigData(
+            loggingEnabled,
+            Collections.singletonList(
+                new LogRecordExporterHolder(
+                    loggingBatchingEnabled, mock(LogRecordExporter.class))));
 
     OpenTelemetrySetupData otelSetupData =
         new OpenTelemetrySetupData(
@@ -59,7 +64,7 @@ public class OpenTelemetrySetupDataTest {
             true,
             Collections.singletonList(new SpanExporterHolder(true, mock(SpanExporter.class))));
     OtelMeterConfigData meterConfig = new OtelMeterConfigData(true, Collections.emptyList());
-    OtelLoggingConfigData loggingConfig = new OtelLoggingConfigData(true, true);
+    OtelLoggingConfigData loggingConfig = new OtelLoggingConfigData(true, Collections.emptyList());
 
     assertThrows(
         NullPointerException.class,

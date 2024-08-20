@@ -26,7 +26,7 @@ public class SdkTracerProviderCreatorTest {
             new OtelTracingConfigData(
                 true, Collections.singletonList(new SpanExporterHolder(false, mockSpanExporter)))),
         Arguments.of(new OtelTracingConfigData(true, Collections.emptyList())),
-        Arguments.of(new OtelTracingConfigData(true, Collections.emptyList())));
+        Arguments.of(new OtelTracingConfigData(false, Collections.emptyList())));
   }
 
   @ParameterizedTest

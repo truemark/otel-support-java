@@ -5,7 +5,9 @@ import static org.mockito.Mockito.mock;
 
 import io.opentelemetry.api.GlobalOpenTelemetry;
 import io.opentelemetry.api.OpenTelemetry;
+import io.opentelemetry.sdk.logs.export.LogRecordExporter;
 import io.opentelemetry.sdk.trace.export.SpanExporter;
+import io.truemark.otel.core.models.LogRecordExporterHolder;
 import io.truemark.otel.core.models.OpenTelemetrySetupData;
 import io.truemark.otel.core.models.OtelLoggingConfigData;
 import io.truemark.otel.core.models.OtelMeterConfigData;
@@ -43,7 +45,7 @@ public class OpenTelemetryStartupConfigTest {
             true,
             Collections.singletonList(new SpanExporterHolder(true, mock(SpanExporter.class))));
     meterConfig = new OtelMeterConfigData(true, Collections.emptyList());
-    loggingConfig = new OtelLoggingConfigData(true, true);
+    loggingConfig = new OtelLoggingConfigData(true, Collections.emptyList());
 
     otelSetupData =
         new OpenTelemetrySetupData(
@@ -75,7 +77,11 @@ public class OpenTelemetryStartupConfigTest {
             Collections.singletonList(
                 new SpanExporterHolder(batchingEnabled, mock(SpanExporter.class))));
     meterConfig = new OtelMeterConfigData(meterEnabled, Collections.emptyList());
-    loggingConfig = new OtelLoggingConfigData(loggingEnabled, batchingEnabled);
+    loggingConfig =
+        new OtelLoggingConfigData(
+            loggingEnabled,
+            Collections.singletonList(
+                new LogRecordExporterHolder(batchingEnabled, mock(LogRecordExporter.class))));
 
     otelSetupData =
         new OpenTelemetrySetupData(

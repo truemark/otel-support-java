@@ -1,20 +1,23 @@
 package io.truemark.otel.core.models;
 
+import java.util.List;
+
 public class OtelLoggingConfigData {
   private final boolean loggingEnabled;
-  private final boolean isBatchingEnabled;
+  private final List<LogRecordExporterHolder> logRecordExporterHolders;
 
-  public OtelLoggingConfigData(boolean loggingEnabled, boolean isBatchingEnabled) {
+  public OtelLoggingConfigData(
+      boolean loggingEnabled, List<LogRecordExporterHolder> logRecordExporterHolders) {
     this.loggingEnabled = loggingEnabled;
-    this.isBatchingEnabled = isBatchingEnabled;
+    this.logRecordExporterHolders = logRecordExporterHolders;
   }
 
   public boolean isLoggingEnabled() {
     return loggingEnabled;
   }
 
-  public boolean isBatchingEnabled() {
-    return isBatchingEnabled;
+  public List<LogRecordExporterHolder> getLogRecordExporterHolders() {
+    return logRecordExporterHolders;
   }
 
   @Override
@@ -22,8 +25,8 @@ public class OtelLoggingConfigData {
     return "OtelLoggingConfigData{"
         + "loggingEnabled="
         + loggingEnabled
-        + ", isBatchingEnabled="
-        + isBatchingEnabled
+        + ", logRecordExporterHolders="
+        + logRecordExporterHolders
         + '}';
   }
 }
