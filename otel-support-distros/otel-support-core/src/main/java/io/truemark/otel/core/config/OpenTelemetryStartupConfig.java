@@ -76,7 +76,7 @@ public class OpenTelemetryStartupConfig {
                         .put(SERVICE_NAME_KEY, otelSetupData.getServiceConfig().getServiceName())
                         .put(
                             SERVICE_VERSION_KEY,
-                            otelSetupData.getServiceConfig().getServiceVertion())
+                            otelSetupData.getServiceConfig().getServiceVersion())
                         .build()));
 
     if (additionalResources != null && !additionalResources.isEmpty()) {

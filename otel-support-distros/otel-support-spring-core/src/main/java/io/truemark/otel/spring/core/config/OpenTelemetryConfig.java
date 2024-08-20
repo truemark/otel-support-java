@@ -106,7 +106,7 @@ public class OpenTelemetryConfig {
             : Collections.emptyList());
   }
 
-  private OtelServiceConfigData createServiceConfigData() {
+  public OtelServiceConfigData createServiceConfigData() {
     String serviceName =
         env.getRequiredProperty(OtelCustomProperties.OTEL_SERVICE_NAME, String.class);
     String serviceVersion =
@@ -114,7 +114,7 @@ public class OpenTelemetryConfig {
     return new OtelServiceConfigData(serviceName, serviceVersion);
   }
 
-  private OtelOtlpConfigData createOtlpConfigData() {
+  public OtelOtlpConfigData createOtlpConfigData() {
     boolean otlpEnabled =
         env.getProperty(OtelCustomProperties.OTEL_OTLP_ENABLED, Boolean.class, false);
     String otlpEndpoint =

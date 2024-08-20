@@ -14,7 +14,7 @@ public class OtelServiceConfigDataTest {
     OtelServiceConfigData serviceConfig = new OtelServiceConfigData(serviceName, serviceVersion);
     assertNotNull(serviceConfig.toString());
     assertEquals(serviceName, serviceConfig.getServiceName());
-    assertEquals(serviceVersion, serviceConfig.getServiceVertion());
+    assertEquals(serviceVersion, serviceConfig.getServiceVersion());
   }
 
   @ParameterizedTest
