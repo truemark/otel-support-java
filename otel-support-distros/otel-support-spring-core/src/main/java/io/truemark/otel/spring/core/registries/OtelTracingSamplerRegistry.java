@@ -1,4 +1,4 @@
-package io.truemark.otel.spring.core.api;
+package io.truemark.otel.spring.core.registries;
 
 import io.opentelemetry.sdk.trace.samplers.Sampler;
 

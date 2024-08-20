@@ -1,4 +1,4 @@
-package io.truemark.otel.spring.core.api;
+package io.truemark.otel.spring.core.registries;
 
 import io.truemark.otel.core.models.LogRecordExporterHolder;
 import java.util.List;
