@@ -10,7 +10,7 @@
         <relativePath>../../otel-support-parents/parent-otel-support-spring-boot-3.x</relativePath>
     </parent>
 
-    <artifactId>otel-support-spring-boot-3.x</artifactId>
+    <artifactId>otel-support-spring-boot-starter-3.x</artifactId>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
