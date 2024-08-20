@@ -9,11 +9,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 class SampleApplicationTest {
 
-    @Autowired
-    private TestController testController;
+  @Autowired private TestController testController;
 
-    @Test
-    void test() {
-        Assertions.assertNotNull(testController.test());
-    }
+  @Test
+  void test() {
+    Assertions.assertNotNull(testController.test());
+  }
 }

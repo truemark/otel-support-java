@@ -10,7 +10,6 @@
     <packaging>pom</packaging>
     <modules>
         <module>parent-otel-support-basic</module>
-        <module>parent-otel-support-spring-core</module>
         <module>parent-otel-support-spring-boot-2.x</module>
         <module>parent-otel-support-spring-boot-3.x</module>
     </modules>

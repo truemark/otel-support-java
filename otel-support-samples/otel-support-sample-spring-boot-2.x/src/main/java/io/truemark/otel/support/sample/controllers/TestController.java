@@ -7,14 +7,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class TestController {
 
-    private final OpenTelemetry openTelemetry;
+  private final OpenTelemetry openTelemetry;
 
-    public TestController(final OpenTelemetry openTelemetry) {
-        this.openTelemetry = openTelemetry;
-    }
+  public TestController(final OpenTelemetry openTelemetry) {
+    this.openTelemetry = openTelemetry;
+  }
 
-    @GetMapping("/test")
-    public String test() {
-        return "It Works!";
-    }
+  @GetMapping("/test")
+  public String test() {
+    return "It Works!";
+  }
 }
