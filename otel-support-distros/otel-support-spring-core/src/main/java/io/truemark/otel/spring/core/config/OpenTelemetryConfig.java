@@ -19,6 +19,7 @@ import io.truemark.otel.spring.core.api.OtelTracingSpanExportersRegistry;
 import io.truemark.otel.spring.core.utils.OtelCustomProperties;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Logger;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -26,6 +27,7 @@ import org.springframework.core.env.Environment;
 @Configuration
 public class OpenTelemetryConfig {
 
+  private static final Logger log = Logger.getLogger(OpenTelemetryConfig.class.getName());
   private final Environment env;
 
   public OpenTelemetryConfig(Environment env) {
@@ -37,13 +39,17 @@ public class OpenTelemetryConfig {
       final OtelTracingConfigData tracingConfigData,
       final OtelMeterConfigData metricsConfigData,
       final OtelLoggingConfigData loggingConfigData) {
-    return new OpenTelemetryStartupConfig(
-        new OpenTelemetrySetupData(
-            createServiceConfigData(),
-            createOtlpConfigData(),
-            tracingConfigData,
-            metricsConfigData,
-            loggingConfigData));
+    log.info("Initializing OTEL Configs");
+    final OpenTelemetryStartupConfig telemetryStartupConfig =
+        new OpenTelemetryStartupConfig(
+            new OpenTelemetrySetupData(
+                createServiceConfigData(),
+                createOtlpConfigData(),
+                tracingConfigData,
+                metricsConfigData,
+                loggingConfigData));
+    log.info("OTEL Configs Initialized");
+    return telemetryStartupConfig;
   }
 
   @Bean
