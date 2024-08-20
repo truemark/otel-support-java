@@ -11,6 +11,7 @@ import io.truemark.otel.spring.core.registries.OtelTracingSamplerRegistry;
 import io.truemark.otel.spring.core.registries.OtelTracingSamplerRegistryDefaultImpl;
 import io.truemark.otel.spring.core.registries.OtelTracingSpanExportersRegistry;
 import io.truemark.otel.spring.core.registries.OtelTracingSpanExportersRegistryDefaultImpl;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -18,31 +19,31 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class OpenTelemetryAutoconfiguration {
 
-  // @ConditionalOnMissingBean(OtelLoggingExportersRegistry.class)
+  @ConditionalOnMissingBean(OtelLoggingExportersRegistry.class)
   @Bean
   public OtelLoggingExportersRegistry loggingExportersRegistryDefault() {
     return new OtelLoggingExportersRegistryDefaultImpl();
   }
 
-  // @ConditionalOnMissingBean(OtelMetricExportersRegistry.class)
+  @ConditionalOnMissingBean(OtelMetricExportersRegistry.class)
   @Bean
   public OtelMetricExportersRegistry otelMetricExportersRegistryDefault() {
     return new OtelMetricExportersRegistryDefaultImpl();
   }
 
-  // @ConditionalOnMissingBean(OtelMetricViewersRegistry.class)
+  @ConditionalOnMissingBean(OtelMetricViewersRegistry.class)
   @Bean
   public OtelMetricViewersRegistry otelMetricViewersRegistry() {
     return new OtelMetricViewersRegistryDefaultImpl();
   }
 
-  // @ConditionalOnMissingBean(OtelTracingSamplerRegistry.class)
+  @ConditionalOnMissingBean(OtelTracingSamplerRegistry.class)
   @Bean
   public OtelTracingSamplerRegistry otelTracingSamplerRegistry() {
     return new OtelTracingSamplerRegistryDefaultImpl();
   }
 
-  // @ConditionalOnMissingBean(OtelTracingSpanExportersRegistry.class)
+  @ConditionalOnMissingBean(OtelTracingSpanExportersRegistry.class)
   @Bean
   public OtelTracingSpanExportersRegistry otelTracingSpanExportersRegistry() {
     return new OtelTracingSpanExportersRegistryDefaultImpl();

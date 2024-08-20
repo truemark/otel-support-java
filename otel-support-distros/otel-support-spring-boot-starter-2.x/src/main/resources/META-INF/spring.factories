@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+io.truemark.otel.spring.boot.config.OpenTelemetryAutoconfiguration

@@ -10,7 +10,7 @@
         <relativePath>../../otel-support-parents/parent-otel-support-spring-boot-2.x</relativePath>
     </parent>
 
-    <artifactId>otel-support-sample-spring-boot-2.x</artifactId>
+    <artifactId>otel-support-spring-boot-starter-2.x</artifactId>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -19,14 +19,17 @@
     <dependencies>
         <dependency>
             <groupId>io.truemark</groupId>
-            <artifactId>otel-support-spring-boot-starter-2.x</artifactId>
+            <artifactId>otel-support-spring-core</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
+            <artifactId>spring-boot-starter</artifactId>
         </dependency>
-
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+        </dependency>
 
         <!-- Test Dependencies -->
         <dependency>
