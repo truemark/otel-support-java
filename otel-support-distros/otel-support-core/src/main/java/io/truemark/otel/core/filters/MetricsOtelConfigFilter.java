@@ -1,6 +1,7 @@
 // MetricsOtelConfigFilter.java
 package io.truemark.otel.core.filters;
 
+import io.opentelemetry.exporter.logging.LoggingMetricExporter;
 import io.opentelemetry.exporter.otlp.metrics.OtlpGrpcMetricExporter;
 import io.opentelemetry.sdk.OpenTelemetrySdkBuilder;
 import io.opentelemetry.sdk.metrics.SdkMeterProvider;
@@ -46,7 +47,7 @@ public class MetricsOtelConfigFilter implements OtelConfigFilter {
               ? OtlpGrpcMetricExporter.builder()
                   .setEndpoint(setupData.getOtlpConfig().getOtlpEndpoint())
                   .build()
-              : OtlpGrpcMetricExporter.builder().build();
+              : LoggingMetricExporter.create();
       otelMeterConfig =
           new OtelMeterConfigData(
               existingOtelMetricConfig.isMeterEnabled(),

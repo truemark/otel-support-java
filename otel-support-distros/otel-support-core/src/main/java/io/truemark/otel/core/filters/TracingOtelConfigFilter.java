@@ -1,6 +1,7 @@
 // TracingOtelConfigFilter.java
 package io.truemark.otel.core.filters;
 
+import io.opentelemetry.exporter.logging.LoggingSpanExporter;
 import io.opentelemetry.exporter.otlp.trace.OtlpGrpcSpanExporter;
 import io.opentelemetry.sdk.OpenTelemetrySdkBuilder;
 import io.opentelemetry.sdk.resources.Resource;
@@ -45,7 +46,7 @@ public class TracingOtelConfigFilter implements OtelConfigFilter {
               ? OtlpGrpcSpanExporter.builder()
                   .setEndpoint(setupData.getOtlpConfig().getOtlpEndpoint())
                   .build()
-              : OtlpGrpcSpanExporter.builder().build();
+              : LoggingSpanExporter.create();
       otelTracingConfig =
           new OtelTracingConfigData(
               true, Collections.singletonList(new SpanExporterHolder(true, spanExporter)));
