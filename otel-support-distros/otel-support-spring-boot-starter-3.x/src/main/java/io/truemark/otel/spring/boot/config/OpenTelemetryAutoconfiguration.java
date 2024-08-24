@@ -1,5 +1,9 @@
 package io.truemark.otel.spring.boot.config;
 
+import io.opentelemetry.api.OpenTelemetry;
+import io.opentelemetry.api.metrics.Meter;
+import io.truemark.otel.core.helpers.MetricsRegistrar;
+import io.truemark.otel.core.helpers.MetricsRegistrarImpl;
 import io.truemark.otel.spring.core.annotations.EnableOpenTelemetry;
 import io.truemark.otel.spring.core.registries.OtelLoggingExportersRegistry;
 import io.truemark.otel.spring.core.registries.OtelLoggingExportersRegistryDefaultImpl;
@@ -47,5 +51,16 @@ public class OpenTelemetryAutoconfiguration {
   @Bean
   public OtelTracingSpanExportersRegistry otelTracingSpanExportersRegistry() {
     return new OtelTracingSpanExportersRegistryDefaultImpl();
+  }
+
+  @ConditionalOnMissingBean(Meter.class)
+  @Bean
+  public Meter defaultMeter(OpenTelemetry openTelemetry) {
+    return openTelemetry.getMeterProvider().get("default-app");
+  }
+
+  @Bean
+  public MetricsRegistrar metricsRegistrar(Meter meter) {
+    return new MetricsRegistrarImpl(meter);
   }
 }
