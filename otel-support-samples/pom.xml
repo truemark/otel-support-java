@@ -20,6 +20,7 @@
     <modules>
         <module>otel-support-sample-spring-boot-2.x</module>
         <module>otel-support-sample-spring-boot-3.x</module>
+        <module>otel-support-sample-spring-boot-3.1.x</module>
     </modules>
 
     <build>
