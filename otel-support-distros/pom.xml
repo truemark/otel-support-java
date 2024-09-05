@@ -19,6 +19,7 @@
 
     <modules>
         <module>otel-support-core</module>
+        <module>otel-support-spring-boot-starter-3.1.x</module>
         <module>otel-support-spring-boot-starter-3.x</module>
         <module>otel-support-spring-core</module>
         <module>otel-support-spring-boot-starter-2.x</module>

@@ -11,9 +11,14 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- Otel versions should match -->
         <opentelemetry.version>1.41.0</opentelemetry.version>
+        <opentelemetry-instrumentation-bom.version>2.7.0</opentelemetry-instrumentation-bom.version>
         <opentelemetry-semconv.version>1.26.0-alpha</opentelemetry-semconv.version>
         <opentelemetry-resources.version>2.7.0-alpha</opentelemetry-resources.version>
+
+        <!-- Other versions -->
         <junit-bom.version>5.11.0</junit-bom.version>
         <mockito-bom.version>5.12.0</mockito-bom.version>
         <spotless.version>2.43.0</spotless.version>
@@ -30,6 +35,13 @@
                 <groupId>io.opentelemetry</groupId>
                 <artifactId>opentelemetry-bom</artifactId>
                 <version>${opentelemetry.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.opentelemetry.instrumentation</groupId>
+                <artifactId>opentelemetry-instrumentation-bom</artifactId>
+                <version>${opentelemetry-instrumentation-bom.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
