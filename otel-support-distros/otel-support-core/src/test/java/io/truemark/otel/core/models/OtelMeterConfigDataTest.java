@@ -18,7 +18,8 @@ class OtelMeterConfigDataTest {
   void test_OtelMeterConfigDataConstructorAndGetters_givenVaryingInputs(
       final boolean isMeterEnabled, final List<MetricExporterHolder> metricExporterHolders) {
     OtelMeterConfigData meterConfig =
-        new OtelMeterConfigData(isMeterEnabled, metricExporterHolders);
+        new OtelMeterConfigData(
+            isMeterEnabled, metricExporterHolders, new OtelOtlpConfigData(false, null));
     assertNotNull(meterConfig.toString());
     assertEquals(isMeterEnabled, meterConfig.isMeterEnabled());
   }

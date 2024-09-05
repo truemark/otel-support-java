@@ -43,15 +43,16 @@ public class MetricsOtelConfigFilter implements OtelConfigFilter {
     if (canUseDefaultExporter) {
       final OtelMeterConfigData existingOtelMetricConfig = setupData.getOtelMeterConfig();
       final MetricExporter metricExporter =
-          setupData.getOtlpConfig().isOtlpEnabled()
+          setupData.getOtelMeterConfig().getOtlpConfig().isOtlpEnabled()
               ? OtlpGrpcMetricExporter.builder()
-                  .setEndpoint(setupData.getOtlpConfig().getOtlpEndpoint())
+                  .setEndpoint(setupData.getOtelMeterConfig().getOtlpConfig().getOtlpEndpoint())
                   .build()
               : LoggingMetricExporter.create();
       otelMeterConfig =
           new OtelMeterConfigData(
               existingOtelMetricConfig.isMeterEnabled(),
-              Collections.singletonList(new MetricExporterHolder(metricExporter)));
+              Collections.singletonList(new MetricExporterHolder(metricExporter)),
+              setupData.getOtelMeterConfig().getOtlpConfig());
     } else {
       otelMeterConfig = setupData.getOtelMeterConfig();
     }

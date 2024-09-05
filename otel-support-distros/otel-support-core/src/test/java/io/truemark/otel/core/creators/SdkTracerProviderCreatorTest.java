@@ -6,6 +6,7 @@ import static org.mockito.Mockito.mock;
 import io.opentelemetry.sdk.resources.Resource;
 import io.opentelemetry.sdk.trace.SdkTracerProvider;
 import io.opentelemetry.sdk.trace.export.SpanExporter;
+import io.truemark.otel.core.models.OtelOtlpConfigData;
 import io.truemark.otel.core.models.OtelTracingConfigData;
 import io.truemark.otel.core.models.SpanExporterHolder;
 import java.util.Collections;
@@ -18,15 +19,20 @@ class SdkTracerProviderCreatorTest {
 
   static Stream<Arguments> batchingEnabledProvider() {
     final SpanExporter mockSpanExporter = mock(SpanExporter.class);
+    final OtelOtlpConfigData otlpConfig = new OtelOtlpConfigData(false, null);
     return Stream.of(
         Arguments.of(
             new OtelTracingConfigData(
-                true, Collections.singletonList(new SpanExporterHolder(true, mockSpanExporter)))),
+                true,
+                Collections.singletonList(new SpanExporterHolder(true, mockSpanExporter)),
+                otlpConfig)),
         Arguments.of(
             new OtelTracingConfigData(
-                true, Collections.singletonList(new SpanExporterHolder(false, mockSpanExporter)))),
-        Arguments.of(new OtelTracingConfigData(true, Collections.emptyList())),
-        Arguments.of(new OtelTracingConfigData(false, Collections.emptyList())));
+                true,
+                Collections.singletonList(new SpanExporterHolder(false, mockSpanExporter)),
+                otlpConfig)),
+        Arguments.of(new OtelTracingConfigData(true, Collections.emptyList(), otlpConfig)),
+        Arguments.of(new OtelTracingConfigData(false, Collections.emptyList(), otlpConfig)));
   }
 
   @ParameterizedTest

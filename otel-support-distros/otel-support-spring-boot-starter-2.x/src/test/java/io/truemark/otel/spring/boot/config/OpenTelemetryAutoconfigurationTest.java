@@ -9,10 +9,7 @@ import org.springframework.test.context.TestPropertySource;
 
 @SpringBootTest(classes = OpenTelemetryAutoconfiguration.class)
 @TestPropertySource(
-    properties = {
-      "truemark.otel.service.name=otel-test-service",
-      "truemark.otel.service.version=1.0.0"
-    })
+    properties = {"otel.service.name=otel-test-service", "otel.service.version=1.0.0"})
 public class OpenTelemetryAutoconfigurationTest {
 
   @Autowired private OpenTelemetry openTelemetry;

@@ -17,6 +17,7 @@ import io.truemark.otel.spring.core.registries.OtelMetricViewersRegistry;
 import io.truemark.otel.spring.core.registries.OtelTracingSamplerRegistry;
 import io.truemark.otel.spring.core.registries.OtelTracingSpanExportersRegistry;
 import io.truemark.otel.spring.core.utils.OtelCustomProperties;
+import io.truemark.otel.spring.core.utils.OtelSignalExporter;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Logger;
@@ -44,7 +45,6 @@ public class OpenTelemetryConfig {
         new OpenTelemetryStartupConfig(
             new OpenTelemetrySetupData(
                 createServiceConfigData(),
-                createOtlpConfigData(),
                 tracingConfigData,
                 metricsConfigData,
                 loggingConfigData));
@@ -61,14 +61,18 @@ public class OpenTelemetryConfig {
   public OtelTracingConfigData tracingConfigData(
       final OtelTracingSpanExportersRegistry tracingSpanExportersRegistry,
       final OtelTracingSamplerRegistry tracingSamplerRegistry) {
-    final boolean tracingEnabled =
-        env.getProperty(OtelCustomProperties.OTEL_TRACING_ENABLED, Boolean.class, false);
+    final OtelSignalExporter otelSignalExporter =
+        OtelSignalExporter.fromSignalExporterConfigNameAndType(
+            OtelCustomProperties.OTEL_TRACES_EXPORTER,
+            env.getProperty(OtelCustomProperties.OTEL_TRACES_EXPORTER));
+    final boolean tracingEnabled = otelSignalExporter.isTracesEnabled();
     final List<SpanExporterHolder> spanExporterHolders =
         tracingSpanExportersRegistry != null
             ? tracingSpanExportersRegistry.getRegisterSpanExporterHolders()
             : Collections.emptyList();
     final OtelTracingConfigData tracingConfig =
-        new OtelTracingConfigData(tracingEnabled, spanExporterHolders);
+        new OtelTracingConfigData(
+            tracingEnabled, spanExporterHolders, createOtlpConfigData(otelSignalExporter));
     if (tracingSamplerRegistry != null) {
       tracingConfig.setSampler(tracingSamplerRegistry.getRegisteredSampler());
     }
@@ -79,14 +83,18 @@ public class OpenTelemetryConfig {
   public OtelMeterConfigData metricsConfigData(
       final OtelMetricExportersRegistry metricExportersRegistry,
       final OtelMetricViewersRegistry metricViewersRegistry) {
-    final boolean metricsEnabled =
-        env.getProperty(OtelCustomProperties.OTEL_METRICS_ENABLED, Boolean.class, false);
+    final OtelSignalExporter otelSignalExporter =
+        OtelSignalExporter.fromSignalExporterConfigNameAndType(
+            OtelCustomProperties.OTEL_METRICS_EXPORTER,
+            env.getProperty(OtelCustomProperties.OTEL_METRICS_EXPORTER));
+    final boolean metricsEnabled = otelSignalExporter.isMetricsEnabled();
     final List<MetricExporterHolder> metricExporterHolders =
         metricExportersRegistry != null
             ? metricExportersRegistry.getRegisteredMetricExporters()
             : Collections.emptyList();
     final OtelMeterConfigData meterConfig =
-        new OtelMeterConfigData(metricsEnabled, metricExporterHolders);
+        new OtelMeterConfigData(
+            metricsEnabled, metricExporterHolders, createOtlpConfigData(otelSignalExporter));
     meterConfig.setMetricViews(
         metricViewersRegistry != null
             ? metricViewersRegistry.getRegisteredMetricViews()
@@ -97,8 +105,11 @@ public class OpenTelemetryConfig {
   @Bean
   public OtelLoggingConfigData loggingConfigData(
       final OtelLoggingExportersRegistry loggingExportersRegistry) {
-    final boolean loggingEnabled =
-        env.getProperty(OtelCustomProperties.OTEL_LOGGING_ENABLED, Boolean.class, false);
+    final OtelSignalExporter otelSignalExporter =
+        OtelSignalExporter.fromSignalExporterConfigNameAndType(
+            OtelCustomProperties.OTEL_LOGS_EXPORTER,
+            env.getProperty(OtelCustomProperties.OTEL_LOGS_EXPORTER));
+    final boolean loggingEnabled = otelSignalExporter.isLogsEnabled();
     return new OtelLoggingConfigData(
         loggingEnabled,
         loggingExportersRegistry != null
@@ -114,9 +125,8 @@ public class OpenTelemetryConfig {
     return new OtelServiceConfigData(serviceName, serviceVersion);
   }
 
-  public OtelOtlpConfigData createOtlpConfigData() {
-    boolean otlpEnabled =
-        env.getProperty(OtelCustomProperties.OTEL_OTLP_ENABLED, Boolean.class, false);
+  private OtelOtlpConfigData createOtlpConfigData(final OtelSignalExporter otelSignalExporter) {
+    boolean otlpEnabled = otelSignalExporter.isOTLPEnabled();
     String otlpEndpoint =
         otlpEnabled
             ? env.getRequiredProperty(OtelCustomProperties.OTEL_OTLP_ENDPOINT, String.class)

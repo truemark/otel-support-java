@@ -43,13 +43,13 @@ class OpenTelemetryStartupConfigTest {
     tracingConfig =
         new OtelTracingConfigData(
             true,
-            Collections.singletonList(new SpanExporterHolder(true, mock(SpanExporter.class))));
-    meterConfig = new OtelMeterConfigData(true, Collections.emptyList());
+            Collections.singletonList(new SpanExporterHolder(true, mock(SpanExporter.class))),
+            otlpConfig);
+    meterConfig = new OtelMeterConfigData(true, Collections.emptyList(), otlpConfig);
     loggingConfig = new OtelLoggingConfigData(true, Collections.emptyList());
 
     otelSetupData =
-        new OpenTelemetrySetupData(
-            serviceConfig, otlpConfig, tracingConfig, meterConfig, loggingConfig);
+        new OpenTelemetrySetupData(serviceConfig, tracingConfig, meterConfig, loggingConfig);
   }
 
   @AfterEach
@@ -75,8 +75,9 @@ class OpenTelemetryStartupConfigTest {
         new OtelTracingConfigData(
             tracingEnabled,
             Collections.singletonList(
-                new SpanExporterHolder(batchingEnabled, mock(SpanExporter.class))));
-    meterConfig = new OtelMeterConfigData(meterEnabled, Collections.emptyList());
+                new SpanExporterHolder(batchingEnabled, mock(SpanExporter.class))),
+            otlpConfig);
+    meterConfig = new OtelMeterConfigData(meterEnabled, Collections.emptyList(), otlpConfig);
     loggingConfig =
         new OtelLoggingConfigData(
             loggingEnabled,
@@ -84,8 +85,7 @@ class OpenTelemetryStartupConfigTest {
                 new LogRecordExporterHolder(batchingEnabled, mock(LogRecordExporter.class))));
 
     otelSetupData =
-        new OpenTelemetrySetupData(
-            serviceConfig, otlpConfig, tracingConfig, meterConfig, loggingConfig);
+        new OpenTelemetrySetupData(serviceConfig, tracingConfig, meterConfig, loggingConfig);
 
     openTelemetryStartupConfig = new OpenTelemetryStartupConfig(otelSetupData);
 

@@ -34,9 +34,13 @@ class OpenTelemetrySetupDataTest {
         new OtelTracingConfigData(
             tracingEnabled,
             Collections.singletonList(
-                new SpanExporterHolder(batchingEnabled, mock(SpanExporter.class))));
+                new SpanExporterHolder(batchingEnabled, mock(SpanExporter.class))),
+            otlpConfig);
     OtelMeterConfigData meterConfig =
-        new OtelMeterConfigData(meterEnabled, Collections.emptyList());
+        new OtelMeterConfigData(
+            meterEnabled,
+            Collections.emptyList(),
+            new OtelOtlpConfigData(otlpEnabled, otlpEndpoint));
     OtelLoggingConfigData loggingConfig =
         new OtelLoggingConfigData(
             loggingEnabled,
@@ -45,11 +49,10 @@ class OpenTelemetrySetupDataTest {
                     loggingBatchingEnabled, mock(LogRecordExporter.class))));
 
     OpenTelemetrySetupData otelSetupData =
-        new OpenTelemetrySetupData(
-            serviceConfig, otlpConfig, tracingConfig, meterConfig, loggingConfig);
+        new OpenTelemetrySetupData(serviceConfig, tracingConfig, meterConfig, loggingConfig);
 
     assertEquals(serviceConfig, otelSetupData.getServiceConfig());
-    assertEquals(otlpConfig, otelSetupData.getOtlpConfig());
+    assertEquals(otlpConfig, otelSetupData.getOtelTracingConfig().getOtlpConfig());
     assertEquals(tracingConfig, otelSetupData.getOtelTracingConfig());
     assertEquals(meterConfig, otelSetupData.getOtelMeterConfig());
     assertEquals(loggingConfig, otelSetupData.getOtelLoggingConfig());
@@ -62,34 +65,23 @@ class OpenTelemetrySetupDataTest {
     OtelTracingConfigData tracingConfig =
         new OtelTracingConfigData(
             true,
-            Collections.singletonList(new SpanExporterHolder(true, mock(SpanExporter.class))));
-    OtelMeterConfigData meterConfig = new OtelMeterConfigData(true, Collections.emptyList());
+            Collections.singletonList(new SpanExporterHolder(true, mock(SpanExporter.class))),
+            otlpConfig);
+    OtelMeterConfigData meterConfig =
+        new OtelMeterConfigData(true, Collections.emptyList(), otlpConfig);
     OtelLoggingConfigData loggingConfig = new OtelLoggingConfigData(true, Collections.emptyList());
 
     assertThrows(
         NullPointerException.class,
-        () ->
-            new OpenTelemetrySetupData(
-                null, otlpConfig, tracingConfig, meterConfig, loggingConfig));
+        () -> new OpenTelemetrySetupData(null, tracingConfig, meterConfig, loggingConfig));
     assertThrows(
         NullPointerException.class,
-        () ->
-            new OpenTelemetrySetupData(
-                serviceConfig, null, tracingConfig, meterConfig, loggingConfig));
+        () -> new OpenTelemetrySetupData(serviceConfig, null, meterConfig, loggingConfig));
     assertThrows(
         NullPointerException.class,
-        () ->
-            new OpenTelemetrySetupData(
-                serviceConfig, otlpConfig, null, meterConfig, loggingConfig));
+        () -> new OpenTelemetrySetupData(serviceConfig, tracingConfig, null, loggingConfig));
     assertThrows(
         NullPointerException.class,
-        () ->
-            new OpenTelemetrySetupData(
-                serviceConfig, otlpConfig, tracingConfig, null, loggingConfig));
-    assertThrows(
-        NullPointerException.class,
-        () ->
-            new OpenTelemetrySetupData(
-                serviceConfig, otlpConfig, tracingConfig, meterConfig, null));
+        () -> new OpenTelemetrySetupData(serviceConfig, tracingConfig, meterConfig, null));
   }
 }

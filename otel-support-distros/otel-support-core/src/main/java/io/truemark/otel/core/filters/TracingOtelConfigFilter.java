@@ -42,14 +42,16 @@ public class TracingOtelConfigFilter implements OtelConfigFilter {
         setupData.getOtelTracingConfig().getTraceSpanExporters();
     if (spanExporterHolders == null || spanExporterHolders.isEmpty()) {
       final SpanExporter spanExporter =
-          setupData.getOtlpConfig().isOtlpEnabled()
+          setupData.getOtelTracingConfig().getOtlpConfig().isOtlpEnabled()
               ? OtlpGrpcSpanExporter.builder()
-                  .setEndpoint(setupData.getOtlpConfig().getOtlpEndpoint())
+                  .setEndpoint(setupData.getOtelTracingConfig().getOtlpConfig().getOtlpEndpoint())
                   .build()
               : LoggingSpanExporter.create();
       otelTracingConfig =
           new OtelTracingConfigData(
-              true, Collections.singletonList(new SpanExporterHolder(true, spanExporter)));
+              true,
+              Collections.singletonList(new SpanExporterHolder(true, spanExporter)),
+              setupData.getOtelTracingConfig().getOtlpConfig());
     } else {
       otelTracingConfig = setupData.getOtelTracingConfig();
     }

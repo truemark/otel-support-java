@@ -1,6 +1,7 @@
 // OpenTelemetryConfigTest.java
 package io.truemark.otel.spring.core.config;
 
+import static io.truemark.otel.spring.core.utils.OtelCustomProperties.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.when;
@@ -17,7 +18,6 @@ import io.truemark.otel.spring.core.registries.OtelMetricExportersRegistry;
 import io.truemark.otel.spring.core.registries.OtelMetricViewersRegistry;
 import io.truemark.otel.spring.core.registries.OtelTracingSamplerRegistry;
 import io.truemark.otel.spring.core.registries.OtelTracingSpanExportersRegistry;
-import io.truemark.otel.spring.core.utils.OtelCustomProperties;
 import java.util.Collections;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.AfterEach;
@@ -84,21 +84,19 @@ class OpenTelemetryConfigTest {
     String serviceName = "test-service";
     String serviceVersion = "1.0.0";
     final String otlpEndpoint = "http://localhost:4317";
-    when(env.getProperty(OtelCustomProperties.OTEL_OTLP_ENABLED, Boolean.class, false))
-        .thenReturn(otlpEnabled);
+    final OtelOtlpConfigData otlpConfig;
     if (otlpEnabled) {
-      when(env.getRequiredProperty(OtelCustomProperties.OTEL_OTLP_ENDPOINT, String.class))
-          .thenReturn(otlpEndpoint);
+      otlpConfig = new OtelOtlpConfigData(otlpEnabled, otlpEndpoint);
+    } else {
+      otlpConfig = new OtelOtlpConfigData(otlpEnabled, null);
     }
-    when(env.getRequiredProperty(OtelCustomProperties.OTEL_SERVICE_NAME, String.class))
-        .thenReturn(serviceName);
-    when(env.getRequiredProperty(OtelCustomProperties.OTEL_SERVICE_VERSION, String.class))
-        .thenReturn(serviceVersion);
+    when(env.getRequiredProperty(OTEL_SERVICE_NAME, String.class)).thenReturn(serviceName);
+    when(env.getRequiredProperty(OTEL_SERVICE_VERSION, String.class)).thenReturn(serviceVersion);
 
     OtelTracingConfigData tracingConfigData =
-        new OtelTracingConfigData(tracingEnabled, Collections.emptyList());
+        new OtelTracingConfigData(tracingEnabled, Collections.emptyList(), otlpConfig);
     OtelMeterConfigData meterConfigData =
-        new OtelMeterConfigData(metricsEnabled, Collections.emptyList());
+        new OtelMeterConfigData(metricsEnabled, Collections.emptyList(), otlpConfig);
     OtelLoggingConfigData loggingConfigData =
         new OtelLoggingConfigData(loggingEnabled, Collections.emptyList());
 
@@ -112,8 +110,8 @@ class OpenTelemetryConfigTest {
   @ParameterizedTest
   @MethodSource("booleanProvider")
   void test_tracingConfigData_givenVaryingInputs(boolean tracingEnabled) {
-    when(env.getProperty(OtelCustomProperties.OTEL_TRACING_ENABLED, Boolean.class, false))
-        .thenReturn(tracingEnabled);
+    when(env.getProperty(OTEL_TRACES_EXPORTER))
+        .thenReturn(tracingEnabled ? EXPORTER_CONSOLE : EXPORTER_NONE);
     when(tracingSpanExportersRegistry.getRegisterSpanExporterHolders())
         .thenReturn(Collections.emptyList());
     when(tracingSamplerRegistry.getRegisteredSampler()).thenReturn(null);
@@ -128,8 +126,8 @@ class OpenTelemetryConfigTest {
   @ParameterizedTest
   @MethodSource("booleanProvider")
   void test_metricsConfigData_givenVaryingInputs(boolean metricsEnabled) {
-    when(env.getProperty(OtelCustomProperties.OTEL_METRICS_ENABLED, Boolean.class, false))
-        .thenReturn(metricsEnabled);
+    when(env.getProperty(OTEL_METRICS_EXPORTER))
+        .thenReturn(metricsEnabled ? EXPORTER_CONSOLE : EXPORTER_NONE);
     when(metricExportersRegistry.getRegisteredMetricExporters())
         .thenReturn(Collections.emptyList());
     when(metricViewersRegistry.getRegisteredMetricViews()).thenReturn(Collections.emptyList());
@@ -145,8 +143,8 @@ class OpenTelemetryConfigTest {
   @ParameterizedTest
   @MethodSource("booleanProvider")
   void test_loggingConfigData_givenVaryingInputs(boolean loggingEnabled) {
-    when(env.getProperty(OtelCustomProperties.OTEL_LOGGING_ENABLED, Boolean.class, false))
-        .thenReturn(loggingEnabled);
+    when(env.getProperty(OTEL_LOGS_EXPORTER))
+        .thenReturn(loggingEnabled ? EXPORTER_CONSOLE : EXPORTER_NONE);
     when(loggingExportersRegistry.getRegisteredLoggingExporters())
         .thenReturn(Collections.emptyList());
 
@@ -161,32 +159,13 @@ class OpenTelemetryConfigTest {
   void test_createServiceConfigData_givenVaryingInputs() {
     String serviceName = "test-service";
     String serviceVersion = "1.0.0";
-    when(env.getRequiredProperty(OtelCustomProperties.OTEL_SERVICE_NAME, String.class))
-        .thenReturn(serviceName);
-    when(env.getRequiredProperty(OtelCustomProperties.OTEL_SERVICE_VERSION, String.class))
-        .thenReturn(serviceVersion);
+    when(env.getRequiredProperty(OTEL_SERVICE_NAME, String.class)).thenReturn(serviceName);
+    when(env.getRequiredProperty(OTEL_SERVICE_VERSION, String.class)).thenReturn(serviceVersion);
 
     OtelServiceConfigData serviceConfigData = openTelemetryConfig.createServiceConfigData();
 
     assertEquals(serviceName, serviceConfigData.getServiceName());
     assertEquals(serviceVersion, serviceConfigData.getServiceVersion());
-  }
-
-  @ParameterizedTest
-  @MethodSource("booleanProvider")
-  void test_createOtlpConfigData_givenVaryingInputs(boolean otlpEnabled) {
-    final String otlpEndpoint = "http://localhost:4317";
-    when(env.getProperty(OtelCustomProperties.OTEL_OTLP_ENABLED, Boolean.class, false))
-        .thenReturn(otlpEnabled);
-    if (otlpEnabled) {
-      when(env.getRequiredProperty(OtelCustomProperties.OTEL_OTLP_ENDPOINT, String.class))
-          .thenReturn(otlpEndpoint);
-    }
-
-    OtelOtlpConfigData otlpConfigData = openTelemetryConfig.createOtlpConfigData();
-
-    assertEquals(otlpEnabled, otlpConfigData.isOtlpEnabled());
-    assertEquals(otlpEnabled ? otlpEndpoint : null, otlpConfigData.getOtlpEndpoint());
   }
 
   private static void resetGlobalOpenTelemetry() throws Exception {

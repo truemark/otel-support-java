@@ -9,6 +9,7 @@ import io.opentelemetry.sdk.metrics.export.MetricExporter;
 import io.opentelemetry.sdk.resources.Resource;
 import io.truemark.otel.core.models.MetricExporterHolder;
 import io.truemark.otel.core.models.OtelMeterConfigData;
+import io.truemark.otel.core.models.OtelOtlpConfigData;
 import java.util.Collections;
 import java.util.stream.Stream;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -27,7 +28,9 @@ class SdkMeterProviderCreatorTest {
 
     OtelMeterConfigData otelMeterConfigData =
         new OtelMeterConfigData(
-            true, Collections.singletonList(new MetricExporterHolder(metricExporter)));
+            true,
+            Collections.singletonList(new MetricExporterHolder(metricExporter)),
+            new OtelOtlpConfigData(false, null));
     SdkMeterProvider meterProvider =
         SdkMeterProviderCreator.createMeterProvider(mockResource, otelMeterConfigData);
 

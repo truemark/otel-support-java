@@ -6,11 +6,14 @@ public class OtelCustomProperties {
     super();
   }
 
-  public static final String OTEL_SERVICE_NAME = "truemark.otel.service.name";
-  public static final String OTEL_SERVICE_VERSION = "truemark.otel.service.version";
-  public static final String OTEL_OTLP_ENABLED = "truemark.otel.otlp.enabled";
-  public static final String OTEL_OTLP_ENDPOINT = "truemark.otel.otlp.endpoint";
-  public static final String OTEL_TRACING_ENABLED = "truemark.otel.tracing.enabled";
-  public static final String OTEL_METRICS_ENABLED = "truemark.otel.metrics.enabled";
-  public static final String OTEL_LOGGING_ENABLED = "truemark.otel.logging.enabled";
+  public static final String OTEL_SERVICE_NAME = "otel.service.name";
+  public static final String OTEL_SERVICE_VERSION = "otel.service.version";
+  public static final String OTEL_OTLP_ENDPOINT = "otel.exporter.otlp.endpoint";
+  public static final String OTEL_TRACES_EXPORTER = "otel.traces.exporter";
+  public static final String OTEL_METRICS_EXPORTER = "otel.metrics.exporter";
+  public static final String OTEL_LOGS_EXPORTER = "otel.logs.exporter";
+
+  public static final String EXPORTER_CONSOLE = "console";
+  public static final String EXPORTER_OTLP = "otlp";
+  public static final String EXPORTER_NONE = "none";
 }

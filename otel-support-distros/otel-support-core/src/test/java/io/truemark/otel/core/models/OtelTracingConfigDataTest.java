@@ -35,7 +35,8 @@ class OtelTracingConfigDataTest {
       List<SpanExporterHolder> spanExporterHolders,
       Optional<Sampler> sampler) {
     OtelTracingConfigData configData =
-        new OtelTracingConfigData(tracingEnabled, spanExporterHolders);
+        new OtelTracingConfigData(
+            tracingEnabled, spanExporterHolders, new OtelOtlpConfigData(false, null));
     sampler.ifPresent(configData::setSampler);
 
     assertNotNull(configData.toString());
